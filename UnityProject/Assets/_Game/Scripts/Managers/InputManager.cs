@@ -12,7 +12,6 @@ namespace _Game.Managers
     {
         private float _closestDistance;
         private Camera _camera;
-        private List<ITouchable> _interactableTouchables = new List<ITouchable>();
         private ITouchable _closestTouchable;
         private ITouchable _currentTouchable;
         private Vector2 _initialTouchPosition;
@@ -28,7 +27,7 @@ namespace _Game.Managers
             if (Input.GetMouseButtonDown(0))
             {
                 _initialTouchPosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-                _closestTouchable = GridHandler.Instance.ClosesTouchable(_camera.ScreenToWorldPoint(Input.mousePosition));
+                _closestTouchable = GridHandler.Instance.ClosesTouchable(_initialTouchPosition);
                 if(_closestTouchable == null) return;
                 _currentTouchable = _closestTouchable;
                 MovementHandler<SidelineBlock>.MoveWithEase((SidelineBlock)_currentTouchable, _initialTouchPosition, 50,

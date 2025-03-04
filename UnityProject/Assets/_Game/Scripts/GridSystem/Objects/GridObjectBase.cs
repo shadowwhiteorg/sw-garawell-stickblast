@@ -17,5 +17,10 @@ namespace _Game.GridSystem
             WorldPosition = new Vector2(posX, posY);
             GridPosition = new Vector2Int(column, row);
         }
+
+        public void SetWorldPosition(Vector2 worldPosition)
+        {
+            WorldPosition = worldPosition;
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace _Game.Interfaces
         Vector2Int GridPosition { get; }
         void SetPosition(int column, int row, float posX, float posY);
         
+        void SetWorldPosition(Vector2 worldPosition);
+        
 
     }
 }

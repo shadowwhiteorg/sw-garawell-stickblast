@@ -28,24 +28,15 @@ namespace _Game.GridSystem
         private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
         private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
         private HashSet<Vector2Int> _dotGrid = new();
-        private ITouchable _closestTouchable;
+        [SerializeField] private SidelineBlock _closestTouchable;
         private SidelineBlock _sidelineBlockToCreate;
-        [SerializeField]private List<ITouchable> _interactableTouchables = new List<ITouchable>();
-        public List<ITouchable> InteractableTouchables => _interactableTouchables;
-
-        public GridHandler(ITouchable closestTouchable)
-        {
-            _closestTouchable = closestTouchable;
-        }
-
-        private void Start()
-        {
-           
-        }
+        [SerializeField]private List<SidelineBlock> _interactableTouchables = new List<SidelineBlock>();
+        public List<SidelineBlock> InteractableTouchables => _interactableTouchables;
+        
 
         private void InitializeGrids()
         {
-            _interactableTouchables = new List<ITouchable>();
+            _interactableTouchables = new List<SidelineBlock>();
             InitializeGhostGrid();
             InitializeDotGrid();
             // InitializeSquareGrid();
@@ -97,19 +88,19 @@ namespace _Game.GridSystem
             _interactableTouchables.Add(_sidelineBlockToCreate);
         }
 
-        public void RemoveFromInteractableSidelineBlocks(ITouchable touchable) =>_interactableTouchables.Remove(touchable);
+        public void RemoveFromInteractableSidelineBlocks(SidelineBlock touchable) =>_interactableTouchables.Remove(touchable);
 
         public Vector2 GridCenter()
         {
             return new Vector2(gridSizeX * cellSize / 2, gridSizeY * cellSize / 2);
         }
-        public ITouchable ClosesTouchable(Vector2 touchPosition)
+        public SidelineBlock ClosesTouchable(Vector2 touchPosition)
         {
             _closestTouchable = null;
             _closestDistance = float.MaxValue;
 
             foreach (var touchable in _interactableTouchables)
-            {
+            {   touchable.SetWorldPosition(touchable.transform.position);
                 if (touchable is IGridObject gridObject)
                 {
                     Vector2 touchablePosition = gridObject.WorldPosition;
@@ -117,12 +108,15 @@ namespace _Game.GridSystem
 
                     if (IsWithinTouchSize(touchPosition, touchablePosition, touchSize))
                     {
-                        float distance = Vector2.SqrMagnitude(touchPosition - touchablePosition);
+                        Debug.Log("Step 5");
+                        float distance = Vector2.Distance(touchPosition , touchablePosition);
+                        Debug.Log("Distance"+ distance + "Position "+touchablePosition);
                         if (distance < _closestDistance)
                         {
                             _closestDistance = distance;
                             _closestTouchable = touchable;
                         }
+                        Debug.Log("Closest Distance "+_closestDistance);
                     }
                 }
             }
@@ -137,17 +131,17 @@ namespace _Game.GridSystem
                    touchPosition.y <= touchablePosition.y + touchableSize.y / 2;
         }
 
-        public void AddToInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Add(touchable);
-        public void RemoveFromInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Remove(touchable);
+        public void AddToInteractableTouchables(SidelineBlock touchable) =>_interactableTouchables.Add(touchable);
+        public void RemoveFromInteractableTouchables(SidelineBlock touchable) =>_interactableTouchables.Remove(touchable);
 
         private void OnEnable()
         {
-            EventBus.Subscribe<LevelStartEvent>(e=> InitializeGhostGrid());
+            EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGhostGrid());
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<LevelStartEvent>(e => InitializeGhostGrid());
+            EventBus.Unsubscribe<LevelInitializeEvent>(e => InitializeGhostGrid());
         }
     }
 }

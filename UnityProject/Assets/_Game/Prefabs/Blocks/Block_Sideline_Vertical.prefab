@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7698170725805240020, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
       propertyPath: m_Name
-      value: Block_Sideline_Vertical Variant
+      value: Block_Sideline_Vertical
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -77,4 +77,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1396394bc81249019e8b5915ae75692a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchSize: {x: 5, y: 5}
+  touchSize: {x: 50, y: 50}

@@ -12,16 +12,5 @@ namespace _Game.Utils
         
         
         
-
-        public static void Test()
-        {
-            EventBus.Subscribe<TouchEvent>(e => Debug.Log($"Touched at {e.Position}"));
-            EventBus.Subscribe<LevelStartEvent>(e => Debug.Log("Level Started"));
-        
-            EventBus.Fire(new TouchEvent { Position = new Vector2(10, 20) });
-            EventBus.Fire(new LevelStartEvent());
-            
-        }
-        
     }
 }

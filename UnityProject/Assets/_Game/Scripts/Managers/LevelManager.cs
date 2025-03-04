@@ -23,11 +23,12 @@ namespace _Game.Managers
         private void Start()
         {
             InitializeLevel();
+            EventBus.Fire(new LevelStartEvent());
         }
 
         private void InitializeLevel()
         {
-            EventManager.FireOnLevelStart();
+            EventBus.Fire(new LevelInitializeEvent());
         }
 
         private void CreateTouchableBlocks()
@@ -40,7 +41,10 @@ namespace _Game.Managers
                 _sidelineBlockToCreate.LockUnlockMove(false);
                 _sidelineBlockToCreate.transform.SetParent(outOfTheSceneTarget.transform);
                 _sidelineBlockToCreate.transform.localPosition = Vector3.zero + (i-1)*GridHandler.Instance.CellSize*Vector3.right;
+                _sidelineBlockToCreate.SetWorldPosition(_sidelineBlockToCreate.transform.position);
                 _sidelineBlocks.Add(_sidelineBlockToCreate);
+
+                GridHandler.Instance.AddToInteractableTouchables(_sidelineBlockToCreate);
             }
         }
 
@@ -52,12 +56,12 @@ namespace _Game.Managers
 
         private void OnEnable()
         {
-            EventManager.OnLevelStart += CreateTouchableBlocks;
+            EventBus.Subscribe<LevelStartEvent>(e => CreateTouchableBlocks());
         }
 
         private void OnDisable()
         {
-            EventManager.OnLevelStart -= CreateTouchableBlocks;
+            EventBus.Unsubscribe<LevelStartEvent>(e => CreateTouchableBlocks());
         }
     }
 }
