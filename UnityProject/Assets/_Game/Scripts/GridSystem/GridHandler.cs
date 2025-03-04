@@ -32,7 +32,7 @@ namespace _Game.GridSystem
         void InitializeGhostGrid()
         {
             _blocksToPlace.Clear();
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY,cellSize, ghostSquareBlockPrefab,this.gameObject));
+            // _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY,cellSize, ghostSquareBlockPrefab,this.gameObject));
             _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab,this.gameObject));
             _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX +1, gridSizeY,cellSize, ghostHorizontalSidelineBlockPrefab,this.gameObject));
             _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, ghostVerticalSidelineBlockPrefab,this.gameObject));
