@@ -10,7 +10,6 @@ namespace _Game.Managers
 {
     public class InputManager : Singleton<InputManager>
     {
-        [SerializeField] private SidelineBlock testTouchable;
         private float _closestDistance;
         private Camera _camera;
         private List<ITouchable> _interactableTouchables = new List<ITouchable>();
@@ -29,10 +28,9 @@ namespace _Game.Managers
             if (Input.GetMouseButtonDown(0))
             {
                 _initialTouchPosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-                _currentTouchable = testTouchable;
-                // _closestTouchable = GridHandler.Instance.ClosesTouchable(_camera.ScreenToWorldPoint(Input.mousePosition));
-                // if(_closestTouchable == null) return;
-                // _currentTouchable = _closestTouchable;
+                _closestTouchable = GridHandler.Instance.ClosesTouchable(_camera.ScreenToWorldPoint(Input.mousePosition));
+                if(_closestTouchable == null) return;
+                _currentTouchable = _closestTouchable;
                 MovementHandler<SidelineBlock>.MoveWithEase((SidelineBlock)_currentTouchable, _initialTouchPosition, 100,
                     Easing.OutSine);
             }
