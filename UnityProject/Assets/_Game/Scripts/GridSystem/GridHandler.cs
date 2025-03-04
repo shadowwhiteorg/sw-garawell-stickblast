@@ -6,89 +6,94 @@ namespace _Game.GridSystem
 {
     public class GridHandler : Singleton<GridHandler>
     {
-        private Dictionary<Vector2Int, SidelineBlock> sidelineGrid = new();
-        // private Dictionary<Vector2Int, SquareBlock> squareGrid = new();
-    // private HashSet<Vector2Int> dotGrid = new();
+
+        [SerializeField] private int gridSizeX;
+        [SerializeField] private int gridSizeY;
+        [SerializeField] private float cellSize;
+
+        [SerializeField] private SidelineBlock horizontalSidelinePrefab;
+        [SerializeField] private SidelineBlock verticalSidelinePrefab;
+        [SerializeField] private DotBlock dotBlockPrefab;
+        [SerializeField] private SquareBlock squareBlockPrefab;
+        [SerializeField] private GhostBlock ghostDotBlockPrefab, ghostVerticalSidelineBlockPrefab, ghostHorizontalSidelineBlockPrefab, ghostSquareBlockPrefab;
     
-    public GameObject horizontalSidelinePrefab;
-    public GameObject verticalSidelinePrefab;
-    public GameObject dotBlockPrefab;
-    public GameObject squareBlockPrefab;
-    public int gridSizeX = 10;
-    public int gridSizeY = 10;
-    
-    
-    private bool[,] dotGrid;
-    private bool[,] horizontalLines;
-    private bool[,] verticalLines;
-    private SquareBlock[,] squareGrid;
-    
-    
-    private void Start()
-    {
-        // GenerateGrid();
+        private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
+        private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
+        private HashSet<Vector2Int> _dotGrid = new();
         
-        InitializeGrids();
-        GenerateVisualGrid();
-    }
-    void InitializeGrids()
-    {
-        dotGrid = new bool[gridSizeX + 1, gridSizeY + 1]; // +1 for intersections
-        horizontalLines = new bool[gridSizeX, gridSizeY + 1];
-        verticalLines = new bool[gridSizeX + 1, gridSizeY];
-        squareGrid = new SquareBlock[gridSizeX, gridSizeY];
-
-        for (int x = 0; x < gridSizeX; x++)
-        {
-            for (int y = 0; y < gridSizeY; y++)
-            {
-                squareGrid[x, y] = null; // Initially empty
-            }
-        }
-    }
     
-    void GenerateVisualGrid()
-    {
-        // Generate Ghost Dot Blocks (at intersection points)
-        for (int x = 0; x <= gridSizeX; x++)
+        private void Start()
         {
-            for (int y = 0; y <= gridSizeY; y++)
-            {
-                Instantiate(dotBlockPrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
-                dotGrid[x, y] = true; // Mark as present
-            }
+            InitializeGhostGrid();            
         }
 
-        // Generate Ghost Horizontal Lines
-        for (int x = 0; x < gridSizeX; x++)
+        void InitializeGhostGrid()
         {
-            for (int y = 0; y <= gridSizeY; y++)
-            {
-                Instantiate(horizontalSidelinePrefab, new Vector3(x + 0.5f, y, 0), Quaternion.identity, transform);
-                horizontalLines[x, y] = false; // Initially empty
-            }
-        }
+            GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeX,cellSize, ghostDotBlockPrefab);
+            GridPlacer<GhostBlock>.Place(gridSizeX -1 , gridSizeX -1 ,cellSize, ghostHorizontalSidelineBlockPrefab);
+            GridPlacer<GhostBlock>.Place(gridSizeX -1 , gridSizeX -1 ,cellSize, ghostVerticalSidelineBlockPrefab);
+            GridPlacer<GhostBlock>.Place(gridSizeX -1 , gridSizeX -1 ,cellSize, ghostSquareBlockPrefab);
 
-        // Generate Ghost Vertical Lines
-        for (int x = 0; x <= gridSizeX; x++)
-        {
-            for (int y = 0; y < gridSizeY; y++)
-            {
-                Instantiate(verticalSidelinePrefab, new Vector3(x, y + 0.5f, 0), Quaternion.identity, transform);
-                verticalLines[x, y] = false; // Initially empty
-            }
         }
-
-        // Generate Ghost Square Blocks
-        for (int x = 0; x < gridSizeX; x++)
-        {
-            for (int y = 0; y < gridSizeY; y++)
-            {
-                Instantiate(squareBlockPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity, transform);
-                squareGrid[x, y] = null; // Initially empty
-            }
-        }
-    }
+    
+    // void InitializeGrids()
+    // {
+    //     dotGrid = new bool[gridSizeX + 1, gridSizeY + 1]; // +1 for intersections
+    //     horizontalLines = new bool[gridSizeX, gridSizeY + 1];
+    //     verticalLines = new bool[gridSizeX + 1, gridSizeY];
+    //     squareGrid = new SquareBlock[gridSizeX, gridSizeY];
+    //
+    //     for (int x = 0; x < gridSizeX; x++)
+    //     {
+    //         for (int y = 0; y < gridSizeY; y++)
+    //         {
+    //             squareGrid[x, y] = null; // Initially empty
+    //         }
+    //     }
+    // }
+    //
+    // void GenerateVisualGrid()
+    // {
+    //     // Generate Ghost Dot Blocks (at intersection points)
+    //     for (int x = 0; x <= gridSizeX; x++)
+    //     {
+    //         for (int y = 0; y <= gridSizeY; y++)
+    //         {
+    //             Instantiate(dotBlockPrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
+    //             dotGrid[x, y] = true; // Mark as present
+    //         }
+    //     }
+    //
+    //     // Generate Ghost Horizontal Lines
+    //     for (int x = 0; x < gridSizeX; x++)
+    //     {
+    //         for (int y = 0; y <= gridSizeY; y++)
+    //         {
+    //             Instantiate(horizontalSidelinePrefab, new Vector3(x + 0.5f, y, 0), Quaternion.identity, transform);
+    //             horizontalLines[x, y] = false; // Initially empty
+    //         }
+    //     }
+    //
+    //     // Generate Ghost Vertical Lines
+    //     for (int x = 0; x <= gridSizeX; x++)
+    //     {
+    //         for (int y = 0; y < gridSizeY; y++)
+    //         {
+    //             Instantiate(verticalSidelinePrefab, new Vector3(x, y + 0.5f, 0), Quaternion.identity, transform);
+    //             verticalLines[x, y] = false; // Initially empty
+    //         }
+    //     }
+    //
+    //     // Generate Ghost Square Blocks
+    //     for (int x = 0; x < gridSizeX; x++)
+    //     {
+    //         for (int y = 0; y < gridSizeY; y++)
+    //         {
+    //             Instantiate(squareBlockPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity, transform);
+    //             squareGrid[x, y] = null; // Initially empty
+    //         }
+    //     }
+    // }
 
     // private void GenerateGrid()
     // {
