@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Game.GridSystem
 {
-    public class GhostBlock : Object, IGridObject
+    public class GhostBlock : GridObjectBase
     {
         public int RowY { get; }
         public int ColumnX { get; }
