@@ -6,6 +6,30 @@ namespace _Game.Utils
 {
     public static class MovementHandler<T> where T : MonoBehaviour
      {
+         private static Vector3 _startPosition;
+         private static float _elapsedTime;
+
+         public static void FollowTarget(T movingObjet,Vector3 targetPosition, Vector3 followOffset = default, float speed = 100f)
+         {
+             movingObjet.StartCoroutine(FollowTargetCoroutine(movingObjet, targetPosition, followOffset, speed));
+         }
+
+         private static IEnumerator FollowTargetCoroutine(T movingObject,Vector3 targetPosition, Vector3 followOffset = default,
+             float speed = 100f)
+         {
+             _startPosition = movingObject.transform.position;
+             _elapsedTime = 0f;
+
+             while (Vector3.Distance(movingObject.transform.position, targetPosition) > 0.1f)
+             {
+                 _elapsedTime += Time.deltaTime;
+                 Vector3 newPosition = Vector3.Lerp(_startPosition, targetPosition + followOffset, _elapsedTime * speed);
+                 movingObject.transform.position = newPosition;
+                 yield return null;
+             }
+             movingObject.transform.position = targetPosition + followOffset;
+         }
+         
          
          public static void MoveWithEase(T movingObject, Vector3 targetPosition, float movementSpeed, Easing easing)
          {
@@ -14,16 +38,16 @@ namespace _Game.Utils
          
          private static IEnumerator MoveToTarget(T movingObject, Vector3 targetPosition, float movementSpeed, Easing easing)
          {
-             Vector3 startPosition = movingObject.transform.position;
-             float elapsedTime = 0f;
-             float journeyLength = Vector3.Distance(startPosition, targetPosition);
+             _startPosition = movingObject.transform.position;
+             _elapsedTime = 0f;
+             float journeyLength = Vector3.Distance(_startPosition, targetPosition);
 
-             while (elapsedTime < journeyLength / movementSpeed)
+             while (_elapsedTime < journeyLength / movementSpeed)
              {
-                 elapsedTime += Time.deltaTime;
-                 float t = elapsedTime / (journeyLength / movementSpeed);
+                 _elapsedTime += Time.deltaTime;
+                 float t = _elapsedTime / (journeyLength / movementSpeed);
                  t = CalculateEasing(easing, t);
-                 movingObject.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+                 movingObject.transform.position = Vector3.Lerp(_startPosition, targetPosition, t);
                  yield return null;
              }
              movingObject.transform.position = targetPosition;

@@ -16,29 +16,106 @@ namespace _Game.GridSystem
         [SerializeField] private SidelineBlock verticalSidelinePrefab;
         [SerializeField] private DotBlock dotBlockPrefab;
         [SerializeField] private SquareBlock squareBlockPrefab;
-        [SerializeField] private GhostBlock ghostDotBlockPrefab, ghostVerticalSidelineBlockPrefab, ghostHorizontalSidelineBlockPrefab, ghostSquareBlockPrefab;
+        [SerializeField] private GhostBlock ghostDotBlockPrefab, ghostVerticalSidelineBlockPrefab, 
+                                            ghostHorizontalSidelineBlockPrefab, ghostSquareBlockPrefab;
+        
 
         private List<GridObjectBase> _blocksToPlace = new List<GridObjectBase>();
         private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
         private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
         private HashSet<Vector2Int> _dotGrid = new();
-        
-    
+        private ITouchable _closestTouchable;
+        private float _closestDistance;
+        private List<ITouchable> _interactableTouchables = new List<ITouchable>();
+
+        public GridHandler(ITouchable closestTouchable)
+        {
+            _closestTouchable = closestTouchable;
+        }
+
         private void Start()
         {
-            InitializeGhostGrid();            
+            InitializeGhostGrid();
+            InitializeDotGrid();
+            InitializeSquareGrid();
+            InitializeSideGrid();
+        }
+
+        private void InitializeDotGrid()
+        {
+            _blocksToPlace = new List<GridObjectBase>();
+            _blocksToPlace.Clear();
+            _blocksToPlace.AddRange(GridPlacer<DotBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, dotBlockPrefab,this.gameObject));
+            
+            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"GhostParent");
+        }
+
+        private void InitializeSquareGrid()
+        {
+            _blocksToPlace = new List<GridObjectBase>();
+            _blocksToPlace.Clear();
+            _blocksToPlace.AddRange(GridPlacer<SquareBlock>.Place(gridSizeX, gridSizeY,cellSize, squareBlockPrefab,this.gameObject));
+            
+            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"SquareParent");
+        }
+        void InitializeSideGrid()
+        {
+            _blocksToPlace = new List<GridObjectBase>();
+            _blocksToPlace.Clear();
+            // _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab));
+            _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX +1, gridSizeY,cellSize, horizontalSidelinePrefab));
+            _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, verticalSidelinePrefab));
+            
+            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"DotParent");
         }
 
         void InitializeGhostGrid()
         {
+            _blocksToPlace = new List<GridObjectBase>();
             _blocksToPlace.Clear();
-            // _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY,cellSize, ghostSquareBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX +1, gridSizeY,cellSize, ghostHorizontalSidelineBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, ghostVerticalSidelineBlockPrefab,this.gameObject));
+            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab));
+            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX +1, gridSizeY,cellSize, ghostHorizontalSidelineBlockPrefab));
+            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, ghostVerticalSidelineBlockPrefab));
             
-            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"GhostParent");
+            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"DotParent");
         }
+        
+        public ITouchable ClosesTouchable(Vector2 touchPosition)
+        {
+            _closestTouchable = null;
+            _closestDistance = float.MaxValue;
+
+            foreach (var touchable in _interactableTouchables)
+            {
+                if (touchable is IGridObject gridObject)
+                {
+                    Vector2 touchablePosition = gridObject.WorldPosition;
+                    Vector2 touchSize = touchable.TouchSize;
+
+                    if (IsWithinTouchSize(touchPosition, touchablePosition, touchSize))
+                    {
+                        float distance = Vector2.SqrMagnitude(touchPosition - touchablePosition);
+                        if (distance < _closestDistance)
+                        {
+                            _closestDistance = distance;
+                            _closestTouchable = touchable;
+                        }
+                    }
+                }
+            }
+            return _closestTouchable;
+        }
+        
+        private bool IsWithinTouchSize(Vector2 touchPosition, Vector2 touchablePosition, Vector2 touchableSize)
+        {
+            return touchPosition.x >= touchablePosition.x - touchableSize.x / 2 &&
+                   touchPosition.x <= touchablePosition.x + touchableSize.x / 2 &&
+                   touchPosition.y >= touchablePosition.y - touchableSize.y / 2 &&
+                   touchPosition.y <= touchablePosition.y + touchableSize.y / 2;
+        }
+
+        public void AddToInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Add(touchable);
+        public void RemoveFromInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Remove(touchable);
         
     }
 }
