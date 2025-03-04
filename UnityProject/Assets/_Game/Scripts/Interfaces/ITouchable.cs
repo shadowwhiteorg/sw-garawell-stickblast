@@ -6,6 +6,5 @@ namespace _Game.Interfaces
     {
         Vector2 TouchSize { get; set; }
         void SetTouchSize(float xRange, float yRange);
-        Vector2 GetTouchSize();
     }
 }
