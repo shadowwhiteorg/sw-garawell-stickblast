@@ -9,10 +9,13 @@ namespace _Game.GridSystem
         public int ColumnX { get; }
         public float PosX { get; }
         public float PosY { get; }
-        public void SetPosition(int column, int row, float posX, float posY)
+        public Vector2 WorldPosition { get; private set; }
+        public Vector2Int GridPosition { get; private set; }
+
+        public virtual void SetPosition(int column, int row, float posX, float posY)
         {
+            WorldPosition = new Vector2(posX, posY);
+            GridPosition = new Vector2Int(column, row);
         }
-        public Vector2Int GridPosition { get; protected set; }
-        public Vector2 WorldPosition { get; }
     }
 }

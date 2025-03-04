@@ -2,11 +2,11 @@
 
 namespace _Game.GridSystem
 {
-    public class SquareBlock : GridObjectBase
+    public sealed class SquareBlock : GridObjectBase
     {
-        public SquareBlock(Vector2Int gridPosition)
+        public SquareBlock(Vector2Int gridPosition, Vector2 worldPosition)
         {
-            GridPosition = gridPosition;
+            SetPosition(gridPosition.x, gridPosition.y, worldPosition.x, worldPosition.y); 
         }
     }
 }
