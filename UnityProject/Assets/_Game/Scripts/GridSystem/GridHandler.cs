@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using _Game.DataStructures;
 using _Game.Interfaces;
 using _Game.Utils;
 using UnityEngine;
@@ -19,14 +21,17 @@ namespace _Game.GridSystem
         [SerializeField] private GhostBlock ghostDotBlockPrefab, ghostVerticalSidelineBlockPrefab, 
                                             ghostHorizontalSidelineBlockPrefab, ghostSquareBlockPrefab;
         
-
+        public float CellSize => cellSize;
+        
+        private float _closestDistance;
         private List<GridObjectBase> _blocksToPlace = new List<GridObjectBase>();
         private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
         private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
         private HashSet<Vector2Int> _dotGrid = new();
         private ITouchable _closestTouchable;
-        private float _closestDistance;
-        private List<ITouchable> _interactableTouchables = new List<ITouchable>();
+        private SidelineBlock _sidelineBlockToCreate;
+        [SerializeField]private List<ITouchable> _interactableTouchables = new List<ITouchable>();
+        public List<ITouchable> InteractableTouchables => _interactableTouchables;
 
         public GridHandler(ITouchable closestTouchable)
         {
@@ -35,10 +40,16 @@ namespace _Game.GridSystem
 
         private void Start()
         {
+           
+        }
+
+        private void InitializeGrids()
+        {
+            _interactableTouchables = new List<ITouchable>();
             InitializeGhostGrid();
             InitializeDotGrid();
-            InitializeSquareGrid();
-            InitializeSideGrid();
+            // InitializeSquareGrid();
+            // InitializeSideGrid();
         }
 
         private void InitializeDotGrid()
@@ -62,7 +73,6 @@ namespace _Game.GridSystem
         {
             _blocksToPlace = new List<GridObjectBase>();
             _blocksToPlace.Clear();
-            // _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab));
             _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX +1, gridSizeY,cellSize, horizontalSidelinePrefab));
             _blocksToPlace.AddRange(GridPlacer<SidelineBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, verticalSidelinePrefab));
             
@@ -79,7 +89,20 @@ namespace _Game.GridSystem
             
             GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"DotParent");
         }
-        
+
+        public SidelineBlock CreateSidelineBlock(bool isHorizontal)
+        {
+            _sidelineBlockToCreate = Instantiate(isHorizontal ? horizontalSidelinePrefab : verticalSidelinePrefab);
+            return _sidelineBlockToCreate;
+            _interactableTouchables.Add(_sidelineBlockToCreate);
+        }
+
+        public void RemoveFromInteractableSidelineBlocks(ITouchable touchable) =>_interactableTouchables.Remove(touchable);
+
+        public Vector2 GridCenter()
+        {
+            return new Vector2(gridSizeX * cellSize / 2, gridSizeY * cellSize / 2);
+        }
         public ITouchable ClosesTouchable(Vector2 touchPosition)
         {
             _closestTouchable = null;
@@ -116,6 +139,15 @@ namespace _Game.GridSystem
 
         public void AddToInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Add(touchable);
         public void RemoveFromInteractableTouchables(ITouchable touchable) =>_interactableTouchables.Remove(touchable);
-        
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<LevelStartEvent>(e=> InitializeGhostGrid());
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<LevelStartEvent>(e => InitializeGhostGrid());
+        }
     }
 }

@@ -77,4 +77,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1396394bc81249019e8b5915ae75692a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchSize: {x: 1, y: 1}
+  touchSize: {x: 5, y: 5}

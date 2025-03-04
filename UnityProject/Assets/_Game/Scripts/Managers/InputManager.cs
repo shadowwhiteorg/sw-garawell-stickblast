@@ -31,8 +31,13 @@ namespace _Game.Managers
                 _closestTouchable = GridHandler.Instance.ClosesTouchable(_camera.ScreenToWorldPoint(Input.mousePosition));
                 if(_closestTouchable == null) return;
                 _currentTouchable = _closestTouchable;
-                MovementHandler<SidelineBlock>.MoveWithEase((SidelineBlock)_currentTouchable, _initialTouchPosition, 100,
+                MovementHandler<SidelineBlock>.MoveWithEase((SidelineBlock)_currentTouchable, _initialTouchPosition, 50,
                     Easing.OutSine);
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                LevelManager.Instance.MoveTouchablesIntoScene();
             }
             
             
