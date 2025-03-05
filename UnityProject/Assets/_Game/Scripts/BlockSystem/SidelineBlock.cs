@@ -1,0 +1,38 @@
+﻿using _Game.Interfaces;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace _Game.BlockSystem
+{
+    public sealed class SidelineBlock : GridObjectBase, ITouchable
+    {
+        [SerializeField] private Vector2 touchSize = Vector2.zero;
+        
+        private bool _canMove;
+        
+        public Vector3 InitialPosition { get; private set;}
+        public bool CanMove => _canMove;
+
+        public Vector2 TouchSize
+        {
+            get => touchSize;
+            set => touchSize = value;
+        }
+
+        public void SetInitialPosition(Vector3 position)
+        {
+            InitialPosition = position;
+        }
+        public SidelineBlock(Vector2Int gridPosition, Vector2 worldPosition)
+        {
+            SetPosition( gridPosition.x, gridPosition.y,worldPosition.x,worldPosition.y );
+        }
+
+        public void LockUnlockMove(bool canMove)
+        {
+            _canMove = canMove;
+        }
+    }
+    
+    
+}

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using _Game.Interfaces;
+using _Game.BlockSystem;
 using _Game.Utils;
 using UnityEngine;
 
@@ -7,38 +7,34 @@ namespace _Game.GridSystem
 {
     public class GridHandler : Singleton<GridHandler>
     {
+        private List<SidelineBlock> _interactableTouchables = new();
 
-        [SerializeField] private int gridSizeX;
-        [SerializeField] private int gridSizeY;
-        [SerializeField] private float cellSize;
+        public void RegisterTouchable(SidelineBlock touchable) => _interactableTouchables.Add(touchable);
+        public void UnregisterTouchable(SidelineBlock touchable) => _interactableTouchables.Remove(touchable);
 
-        [SerializeField] private SidelineBlock horizontalSidelinePrefab;
-        [SerializeField] private SidelineBlock verticalSidelinePrefab;
-        [SerializeField] private DotBlock dotBlockPrefab;
-        [SerializeField] private SquareBlock squareBlockPrefab;
-        [SerializeField] private GhostBlock ghostDotBlockPrefab, ghostVerticalSidelineBlockPrefab, ghostHorizontalSidelineBlockPrefab, ghostSquareBlockPrefab;
-
-        private List<GridObjectBase> _blocksToPlace = new List<GridObjectBase>();
-        private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
-        private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
-        private HashSet<Vector2Int> _dotGrid = new();
-        
-    
-        private void Start()
+        public SidelineBlock GetClosestTouchable(Vector2 touchPosition)
         {
-            InitializeGhostGrid();            
+            SidelineBlock closestTouchable = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var touchable in _interactableTouchables)
+            {
+                float distance = Vector2.Distance(touchPosition, touchable.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestTouchable = touchable;
+                }
+            }
+            return closestTouchable;
         }
 
-        void InitializeGhostGrid()
+        public Vector2 GetSnappedGridPosition(Vector2 worldPosition)
         {
-            _blocksToPlace.Clear();
-            // _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY,cellSize, ghostSquareBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX+1, gridSizeY+1,cellSize, ghostDotBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX +1, gridSizeY,cellSize, ghostHorizontalSidelineBlockPrefab,this.gameObject));
-            _blocksToPlace.AddRange(GridPlacer<GhostBlock>.Place(gridSizeX , gridSizeY +1 ,cellSize, ghostVerticalSidelineBlockPrefab,this.gameObject));
-            
-            GridPlacer<GridObjectBase>.PositionTheGridAtCenter(_blocksToPlace,gridSizeX,gridSizeY,cellSize,"GhostParent");
+            float cellSize = 1.0f; // Adjust based on grid
+            int x = Mathf.RoundToInt(worldPosition.x / cellSize);
+            int y = Mathf.RoundToInt(worldPosition.y / cellSize);
+            return new Vector2(x * cellSize, y * cellSize);
         }
-        
     }
 }
