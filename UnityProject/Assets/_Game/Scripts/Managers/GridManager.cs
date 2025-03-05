@@ -7,15 +7,18 @@ using UnityEngine;
 namespace _Game.Managers
 {
 
-    public class GridManager : MonoBehaviour
+    public class GridManager : Singleton<GridManager>
     {
         [SerializeField] private int numberOfRows;
         [SerializeField] private int numberOfColumns;
         [SerializeField] private float blockSize;
+        [SerializeField] BlockCatalog blockCatalog;
         
-        public BlockCatalog blockCatalog; // Assigned in Inspector
         private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
         private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
+        
+        public BlockCatalog BlockCatalog => blockCatalog;
+        public float BlockSize => blockSize;
         
 
         private void InitializeGrid()

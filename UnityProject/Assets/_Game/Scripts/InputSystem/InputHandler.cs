@@ -1,4 +1,5 @@
-﻿using _Game.Utils;
+﻿using _Game.Managers;
+using _Game.Utils;
 using UnityEngine;
 
 namespace _Game.InputSystem
@@ -6,15 +7,18 @@ namespace _Game.InputSystem
 
     public class InputHandler : MonoBehaviour
     {
+
+        
+        
         private Camera _camera;
         private SelectionHandler _selectionHandler;
-        private MovementHandler _movementHandler;
+        private MovementHandler<MonoBehaviour> _movementHandler;
 
         private void Awake()
         {
             _camera = Camera.main;
             _selectionHandler = new SelectionHandler();
-            _movementHandler = new MovementHandler();
+            _movementHandler = new MovementHandler<MonoBehaviour>();
         }
 
         private void Update()
@@ -35,6 +39,14 @@ namespace _Game.InputSystem
             {
                 _selectionHandler.ReleaseSelectedObject();
             }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                LevelManager.Instance.MoveTouchablesIntoScene();
+            }
         }
+        
+        
+        
     }
 }

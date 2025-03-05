@@ -704,6 +704,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69fc97486a2443d88149221865f9a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialTouchableXOffset: 20
+  numberOfTouchableObjects: 3
+  outOfTheSceneTarget: {fileID: 2138644988}
 --- !u!4 &1334702554
 Transform:
   m_ObjectHideFlags: 0

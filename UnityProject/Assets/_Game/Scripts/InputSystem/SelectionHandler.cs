@@ -30,7 +30,7 @@ namespace _Game.InputSystem
             if (!_selectedObject) return;
 
             Vector2 targetPosition = GridHandler.Instance.GetSnappedGridPosition(_selectedObject.transform.position);
-            MovementHandler.MoveWithEase(_selectedObject, targetPosition, 50, Easing.OutSine);
+            MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, targetPosition, 50, Easing.OutSine);
             
 
             _selectedObject = null;

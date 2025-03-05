@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using _Game.DataStructures;
 using _Game.Enums;
 using UnityEngine;
 
 namespace _Game.Utils
 {
-    public class MovementHandler
+    public class MovementHandler<T> where T:MonoBehaviour
     {
         public static void MoveWithEase(MonoBehaviour movingObject, Vector3 targetPosition, float movementSpeed,
             Easing easing)
