@@ -61,9 +61,37 @@
 
 **Goals:**
 
-* Create event bus and dependency injection utility classes.
+* Create event bus and extension method utility classes.
+* Implement Dependency Injection into project to replace singleton
+* Implement Block and Ghost Block movement and placement
+* Finalize input system
+* Implement Core Mechanics - Square Detection & Blast
 
 **Progress:**
 
 * Event Bus class created and used in level manager.
-* Custom DI system implemented and used to replace Singleton pattern.
+* Extension methods created and used in block placement mechanic
+* Core mechanic implemented
+* Input system completed
+* DI implementation cancelled ( overengineering )
+
+## Day 3:
+### Finalize Core Game Features
+**Goals:**
+
+* Refactor Scripts
+* Polish core mechanics
+* Integrate UI system
+* Implement complex blocks ( L and U shaped blocks ) into core mechanic system 
+
+**Progress:**
+*
+
+## Day 4:
+### Polish and Release
+
+**Goals:**
+*
+
+**Progress:**
+*
