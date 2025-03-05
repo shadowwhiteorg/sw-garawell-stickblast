@@ -28,15 +28,15 @@ namespace _Game.Managers
         
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                TryStartDrag();
-            }
+            // if (Input.GetMouseButtonDown(0))
+            // {
+            //     TryStartDrag();
+            // }
 
-            if (_isDragging)
-            {
-                HandleDrag();
-            }
+            // if (_isDragging)
+            // {
+            //     HandleDrag();
+            // }
 
             if (Input.GetMouseButtonUp(0))
             {
@@ -47,7 +47,7 @@ namespace _Game.Managers
                 LevelManager.Instance.MoveTouchablesIntoScene();
             }
             
-            //
+            
             if (Input.GetMouseButtonDown(0))
             {
                 _isDragging = true;
@@ -55,11 +55,12 @@ namespace _Game.Managers
                 _currentBlock = _selectionHandler.SelectClosestObject(touchPosition);
             }
 
-            // if (Input.GetMouseButton(0))
-            // {
-            //     Vector2 currentPosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-            //     _selectionHandler.DragSelectedObject(currentPosition);
-            // }
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 currentPosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+                _selectionHandler.DragSelectedObject(currentPosition);
+                HandleDrag();
+            }
 
             // if (Input.GetMouseButtonUp(0))
             // {

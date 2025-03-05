@@ -27,12 +27,13 @@ namespace _Game.InputSystem
             _selectedObject.transform.position = touchPosition + _offset;
         }
 
-        public void ReleaseSelectedObject()
+        public void ReleaseSelectedObject(SidelineBlock selectedSidelineBlock)
         {
+            _selectedObject = selectedSidelineBlock;
             if (!_selectedObject) return;
 
             // Vector2 targetPosition = GridHandler.Instance.GetSnappedGridPosition(_selectedObject.transform.position);
-            MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, _selectedObject.InitialPosition + LevelManager.Instance.OutOfTheSceneTarget.Position, 50, Easing.OutSine);
+            MovementHandler<SidelineBlock>.MoveWithEase(selectedSidelineBlock, selectedSidelineBlock.InitialPosition + LevelManager.Instance.OutOfTheSceneTarget.Position, 50, Easing.OutSine);
             
 
             _selectedObject = null;

@@ -27,6 +27,7 @@ namespace _Game.BlockSystem
 
         public void ResetPosition()
         {
+            
             // TODO: Get the logic from selection handler -> release selectedObject
         }
     }

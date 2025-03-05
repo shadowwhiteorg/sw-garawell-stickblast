@@ -1,4 +1,5 @@
 ﻿using _Game.BlockSystem;
+using _Game.Enums;
 using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
@@ -29,10 +30,15 @@ namespace _Game.CoreMechanic
             if (GridManager.Instance.IsGridPositionValid(gridPos) && 
                 TryPlaceLine(gridPos, currentBlock))
             {
+                MovementHandler<SidelineBlock>.MoveWithEase(currentBlock, GridManager.Instance.GridToWorldPosition(gridPos),35,Easing.InOutSine);
                 currentBlock.SetPosition(gridPos.x, gridPos.y, GridManager.Instance.GridToWorldPosition(gridPos).x, GridManager.Instance.GridToWorldPosition(gridPos).y);
+                
             }
             else
-            {
+            {   
+                // MovementHandler<SidelineBlock>.MoveWithEase(currentBlock, currentBlock.InitialPosition,35,Easing.InOutSine);
+
+                GridManager.Instance.SelectionHandler.ReleaseSelectedObject(currentBlock);
                 currentBlock.ResetPosition();
             }
 
