@@ -26,7 +26,8 @@ namespace _Game.CoreMechanic
         {
             if (currentBlock == null) return;
 
-            if (TryPlaceLine(gridPos, currentBlock))
+            if (GridManager.Instance.IsGridPositionValid(gridPos) && 
+                TryPlaceLine(gridPos, currentBlock))
             {
                 currentBlock.SetPosition(gridPos.x, gridPos.y, GridManager.Instance.GridToWorldPosition(gridPos).x, GridManager.Instance.GridToWorldPosition(gridPos).y);
             }

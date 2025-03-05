@@ -27,9 +27,71 @@ namespace _Game.Managers
         {
             return sidelineGrid.TryGetValue(gridPos, out block);
         }
+        
+        private void InitializeGrid()
+       {
+           InitializeDotGrid(numberOfColumns, numberOfRows, blockSize);
+           InitializeSquareGrid(numberOfColumns, numberOfRows, blockSize);
+           InitializeSideGrid(numberOfColumns, numberOfRows, blockSize);
+           InitializeGhostGrid(numberOfColumns, numberOfRows, blockSize);
+       }
 
+
+       private void InitializeDotGrid(int gridSizeX, int gridSizeY, float cellSize)
+       {
+           var dots = GridPlacer<DotBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize, blockCatalog.dotBlockPrefab, gameObject);
+           GridPlacer<DotBlock>.PositionTheGridAtCenter(dots, gridSizeX, gridSizeY, cellSize, "DotParent");
+
+
+       }
+
+
+       private void InitializeSquareGrid(int gridSizeX, int gridSizeY, float cellSize)
+       {
+           var squares = GridPlacer<SquareBlock>.Place(gridSizeX, gridSizeY, cellSize, blockCatalog.squareBlockPrefab,
+               gameObject);
+           GridPlacer<SquareBlock>.PositionTheGridAtCenter(squares, gridSizeX, gridSizeY, cellSize, "SquareParent");
+       }
+
+
+       private void InitializeSideGrid(int gridSizeX, int gridSizeY, float cellSize)
+       {
+           var horizontalLines = GridPlacer<SidelineBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
+               blockCatalog.horizontalSidelinePrefab);
+           var verticalLines = GridPlacer<SidelineBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
+               blockCatalog.verticalSidelinePrefab);
+
+
+           GridPlacer<SidelineBlock>.PositionTheGridAtCenter(horizontalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
+           GridPlacer<SidelineBlock>.PositionTheGridAtCenter(verticalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
+       }
+
+
+       private void InitializeGhostGrid(int gridSizeX, int gridSizeY, float cellSize)
+       {
+           var ghostDots = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize,
+               blockCatalog.ghostDotBlockPrefab);
+           var ghostHorizon = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
+               blockCatalog.ghostHorizontalSidelineBlockPrefab);
+           var ghostVertical = GridPlacer<GhostBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
+               blockCatalog.ghostVerticalSidelineBlockPrefab);
+
+
+           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostDots, gridSizeX, gridSizeY, cellSize, "GhostParent");
+           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostHorizon, gridSizeX, gridSizeY, cellSize, "GhostParent");
+           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostVertical, gridSizeX, gridSizeY, cellSize, "GhostParent");
+       }
+       
+       public bool IsGridPositionValid(Vector2Int gridPos)
+       {
+           return gridPos.x >= 0 && gridPos.x < numberOfColumns && 
+                  gridPos.y >= 0 && gridPos.y < numberOfRows;
+       }
+
+        
         public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
         {
+            if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
             return !sidelineGrid.ContainsKey(gridPos);
         }
 
@@ -86,6 +148,11 @@ namespace _Game.Managers
             float x = gridPos.x * blockSize;
             float y = gridPos.y * blockSize;
             return new Vector2(x, y);
+        }
+        
+        private void OnEnable()
+        {
+            EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGrid() );
         }
     }
 }

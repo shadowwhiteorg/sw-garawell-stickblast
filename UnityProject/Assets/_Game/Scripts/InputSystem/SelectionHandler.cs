@@ -12,12 +12,13 @@ namespace _Game.InputSystem
         private SidelineBlock _selectedObject;
         private Vector2 _offset;
 
-        public void SelectClosestObject(Vector2 touchPosition)
+        public SidelineBlock SelectClosestObject(Vector2 touchPosition)
         {
             _selectedObject = GridHandler.Instance.GetClosestTouchable(touchPosition);
-            if (!_selectedObject) return;
+            if (!_selectedObject) return null;
             MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, _selectedObject.transform.position + InputHandler.Instance.InitialTouchableXOffset * Vector3.up, 50, Easing.OutSine);
             _offset = (InputHandler.Instance.InitialTouchableXOffset * Vector3.up);
+            return _selectedObject;
         }
 
         public void DragSelectedObject(Vector2 touchPosition)
