@@ -7,26 +7,27 @@ namespace _Game.BlockSystem
     public class GhostBlockHandler : Singleton<GhostBlockHandler>
     {
         [SerializeField] private GameObject ghostBlockPrefab;
-        private GameObject _currentGhostBlock;
+        private GhostBlock _currentHorizontalGhostBlock;
+        private GhostBlock _currentVerticalGhostBlock;
 
         public void ShowGhostBlock(Vector2Int gridPos, bool isHorizontal)
         {
-            if (_currentGhostBlock == null)
+            GhostBlock ghostBlock = isHorizontal ? _currentHorizontalGhostBlock : _currentVerticalGhostBlock;
+            if (!ghostBlock)
             {
-                _currentGhostBlock = Instantiate(ghostBlockPrefab);
+                ghostBlock = Instantiate(isHorizontal ? GridManager.Instance.BlockCatalog.ghostHorizontalSidelineBlockPrefab : GridManager.Instance.BlockCatalog.ghostVerticalSidelineBlockPrefab);
+                if (isHorizontal) _currentHorizontalGhostBlock = ghostBlock;
+                else _currentVerticalGhostBlock = ghostBlock;
             }
 
-            Vector2 worldPos = GridManager.Instance.GridToWorldPosition(gridPos);
-            _currentGhostBlock.transform.position = worldPos;
-            _currentGhostBlock.SetActive(true);
+            ghostBlock.transform.position = GridManager.Instance.GridToWorldPosition(gridPos);
+            ghostBlock.gameObject.SetActive(true);
         }
 
         public void HideGhostBlock()
         {
-            if (_currentGhostBlock != null)
-            {
-                _currentGhostBlock.SetActive(false);
-            }
+            _currentHorizontalGhostBlock?.gameObject.SetActive(false);
+            _currentVerticalGhostBlock?.gameObject.SetActive(false);
         }
     }
 }

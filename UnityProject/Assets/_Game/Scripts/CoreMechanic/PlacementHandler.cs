@@ -8,9 +8,9 @@ namespace _Game.CoreMechanic
 {
     public class PlacementHandler : Singleton<PlacementHandler>
     {
-        public bool TryGetBlockAt(Vector2Int gridPos, out SidelineBlock block)
+        public bool TryGetBlockAt(Vector2Int gridPos, bool isHorizontal, out SidelineBlock block)
         {
-            return GridManager.Instance.TryGetSidelineBlock(gridPos, out block);
+            return GridManager.Instance.TryGetSidelineBlock(gridPos, isHorizontal, out block);
         }
 
         public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)

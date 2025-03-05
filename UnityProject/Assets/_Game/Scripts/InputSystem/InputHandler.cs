@@ -47,6 +47,11 @@ namespace _Game.Managers
                 LevelManager.Instance.MoveTouchablesIntoScene();
             }
             
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                LevelManager.Instance.CreateTouchableBlocks();
+            }
+            
             
             if (Input.GetMouseButtonDown(0))
             {
@@ -78,7 +83,8 @@ namespace _Game.Managers
             Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int gridPos = GridManager.Instance.WorldToGridPosition(mouseWorldPos);
 
-            if (PlacementHandler.Instance.TryGetBlockAt(gridPos, out SidelineBlock block))
+            // Check for a block at the grid position (default to horizontal for this example)
+            if (PlacementHandler.Instance.TryGetBlockAt(gridPos, true, out SidelineBlock block))
             {
                 _currentBlock = block;
                 _isDragging = true;

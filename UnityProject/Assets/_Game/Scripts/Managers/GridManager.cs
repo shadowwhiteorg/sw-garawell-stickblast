@@ -16,7 +16,7 @@ namespace _Game.Managers
         [SerializeField] private float blockSize;
         [SerializeField] private BlockCatalog blockCatalog;
 
-        private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
+        private Dictionary<Vector2Int, List<SidelineBlock>> _sidelineGrid = new();
         private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
         private Dictionary<Vector2, Vector2Int> _positionGrid = new();
         private SelectionHandler _selectionHandler;
@@ -25,13 +25,25 @@ namespace _Game.Managers
         public float BlockSize => blockSize;
         public int NumberOfRows => numberOfRows;
         public int NumberOfColumns => numberOfColumns;
-        public Dictionary<Vector2Int, SidelineBlock> SidelineGrid => _sidelineGrid;
+        public Dictionary<Vector2Int, List<SidelineBlock>> SidelineGrid => _sidelineGrid;
         public Dictionary<Vector2Int, SquareBlock> SquareGrid => _squareGrid;
         public Dictionary<Vector2, Vector2Int> PositionGrid => _positionGrid;
         public SelectionHandler SelectionHandler => _selectionHandler;
-        public bool TryGetSidelineBlock(Vector2Int gridPos, out SidelineBlock block)
+        public bool TryGetSidelineBlock(Vector2Int gridPos, bool isHorizontal, out SidelineBlock block)
         {
-            return _sidelineGrid.TryGetValue(gridPos, out block);
+            block = null;
+            if (_sidelineGrid.TryGetValue(gridPos, out var blocks))
+            {
+                foreach (var b in blocks)
+                {
+                    if (b.IsHorizontal == isHorizontal)
+                    {
+                        block = b;
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         
         private void InitializeGrid()
@@ -96,28 +108,53 @@ namespace _Game.Managers
        }
 
         
-        public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
-        {
-            if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
-            return !_sidelineGrid.ContainsKey(gridPos);
-        }
+       public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
+       {
+           if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
 
-        public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
-        {
-            if (!_sidelineGrid.TryAdd(gridPos, lineBlock)) return false;
-            MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
-            return true;
-        }
+           // Check if any block at the position has the same orientation
+           if (_sidelineGrid.TryGetValue(gridPos, out var blocks))
+           {
+               foreach (var block in blocks)
+               {
+                   if (block.IsHorizontal == isHorizontal)
+                   {
+                       // A block with the same orientation already exists
+                       return false;
+                   }
+               }
+           }
 
-        public bool HasHorizontalLine(int x, int y)
-        {
-            return _sidelineGrid.TryGetValue(new(x, y), out var line) && line.IsHorizontal;
-        }
+           // No block with the same orientation exists
+           return true;
+       }
 
-        public bool HasVerticalLine(int x, int y)
-        {
-            return _sidelineGrid.TryGetValue(new(x, y), out var line) && !line.IsHorizontal;
-        }
+       public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
+       {
+           if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
+           if (!IsGridPositionEmpty(gridPos, lineBlock.IsHorizontal)) return false; // Position is not empty for this orientation
+
+           // Add the block to the list at the grid position
+           if (!_sidelineGrid.TryGetValue(gridPos, out var blocks))
+           {
+               blocks = new List<SidelineBlock>();
+               _sidelineGrid[gridPos] = blocks;
+           }
+           blocks.Add(lineBlock);
+
+           MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
+           return true;
+       }
+
+       public bool HasHorizontalLine(int x, int y)
+       {
+           return TryGetSidelineBlock(new Vector2Int(x, y), true, out _);
+       }
+
+       public bool HasVerticalLine(int x, int y)
+       {
+           return TryGetSidelineBlock(new Vector2Int(x, y), false, out _);
+       }
         
         public Vector2 GetGridOffset()
         {

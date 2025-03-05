@@ -27,7 +27,7 @@ namespace _Game.Managers
             CreateTouchableBlocks();
             EventBus.Fire(new LevelInitializeEvent());
         }
-        private void CreateTouchableBlocks()
+        public void CreateTouchableBlocks()
         {
             _sidelineBlocks.Clear();
 
