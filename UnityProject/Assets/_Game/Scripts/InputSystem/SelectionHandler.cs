@@ -1,6 +1,7 @@
 ﻿using _Game.BlockSystem;
 using _Game.Enums;
 using _Game.GridSystem;
+using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
 
@@ -14,9 +15,9 @@ namespace _Game.InputSystem
         public void SelectClosestObject(Vector2 touchPosition)
         {
             _selectedObject = GridHandler.Instance.GetClosestTouchable(touchPosition);
-            if (_selectedObject == null) return;
-
-            _offset = (Vector2)_selectedObject.transform.position - touchPosition;
+            if (!_selectedObject) return;
+            MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, _selectedObject.transform.position + InputHandler.Instance.InitialTouchableXOffset * Vector3.up, 50, Easing.OutSine);
+            _offset = (InputHandler.Instance.InitialTouchableXOffset * Vector3.up);
         }
 
         public void DragSelectedObject(Vector2 touchPosition)
@@ -29,8 +30,8 @@ namespace _Game.InputSystem
         {
             if (!_selectedObject) return;
 
-            Vector2 targetPosition = GridHandler.Instance.GetSnappedGridPosition(_selectedObject.transform.position);
-            MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, targetPosition, 50, Easing.OutSine);
+            // Vector2 targetPosition = GridHandler.Instance.GetSnappedGridPosition(_selectedObject.transform.position);
+            MovementHandler<SidelineBlock>.MoveWithEase(_selectedObject, _selectedObject.InitialPosition + LevelManager.Instance.OutOfTheSceneTarget.Position, 50, Easing.OutSine);
             
 
             _selectedObject = null;

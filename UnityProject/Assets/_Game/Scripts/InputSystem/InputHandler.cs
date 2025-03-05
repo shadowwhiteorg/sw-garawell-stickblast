@@ -5,14 +5,16 @@ using UnityEngine;
 namespace _Game.InputSystem
 {
 
-    public class InputHandler : MonoBehaviour
+    public class InputHandler : Singleton<InputHandler>
     {
-
-        
+        [SerializeField] private float initialTouchableXOffset;
         
         private Camera _camera;
         private SelectionHandler _selectionHandler;
         private MovementHandler<MonoBehaviour> _movementHandler;
+        
+        public float InitialTouchableXOffset => initialTouchableXOffset;
+
 
         private void Awake()
         {

@@ -12,10 +12,11 @@ namespace _Game.Managers
 {
     public class LevelManager : Singleton<LevelManager>
     {
-        [SerializeField] private float initialTouchableXOffset;
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
         private List<SidelineBlock> _sidelineBlocks = new();
+        
+        public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
         private void Start()
         {
             InitializeLevel();
@@ -44,7 +45,9 @@ namespace _Game.Managers
             var sidelineBlock = Instantiate(prefab, outOfTheSceneTarget.transform, true);
 
             sidelineBlock.LockUnlockMove(false);
-            sidelineBlock.transform.localPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize);
+            Vector3 mTargetLocalPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize);
+            sidelineBlock.transform.localPosition = mTargetLocalPosition;
+            sidelineBlock.SetInitialPosition(mTargetLocalPosition);
             sidelineBlock.SetWorldPosition(sidelineBlock.transform.position);
 
             GridHandler.Instance.RegisterTouchable(sidelineBlock);
