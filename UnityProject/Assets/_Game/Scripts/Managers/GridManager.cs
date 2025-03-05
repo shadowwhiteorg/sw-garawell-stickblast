@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Game.BlockSystem;
 using _Game.DataStructures;
 using _Game.Utils;
@@ -71,6 +72,11 @@ namespace _Game.Managers
         private void OnEnable()
         {
             EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGrid() );
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<LevelInitializeEvent>(e=> InitializeGrid() );
         }
     }
 }
