@@ -103,8 +103,8 @@ namespace _Game.Managers
        
        public bool IsGridPositionValid(Vector2Int gridPos)
        {
-           return gridPos.x >= 0 && gridPos.x < numberOfColumns && 
-                  gridPos.y >= 0 && gridPos.y < numberOfRows;
+           return gridPos.x >= 0 && gridPos.x < numberOfColumns+1 && 
+                  gridPos.y >= 0 && gridPos.y < numberOfRows+1;
        }
 
         
