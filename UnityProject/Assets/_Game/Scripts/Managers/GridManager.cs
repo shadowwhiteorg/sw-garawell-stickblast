@@ -1,82 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Game.BlockSystem;
+using _Game.CoreMechanic;
 using _Game.DataStructures;
 using _Game.Utils;
 using UnityEngine;
 
 namespace _Game.Managers
 {
-
     public class GridManager : Singleton<GridManager>
     {
         [SerializeField] private int numberOfRows;
         [SerializeField] private int numberOfColumns;
         [SerializeField] private float blockSize;
-        [SerializeField] BlockCatalog blockCatalog;
-        
-        private Dictionary<Vector2Int, SidelineBlock> _sidelineGrid = new();
-        private Dictionary<Vector2Int, SquareBlock> _squareGrid = new();
-        
+        [SerializeField] private BlockCatalog blockCatalog;
+
+        private Dictionary<Vector2Int, SidelineBlock> sidelineGrid = new();
+        private Dictionary<Vector2Int, SquareBlock> squareGrid = new();
+
         public BlockCatalog BlockCatalog => blockCatalog;
         public float BlockSize => blockSize;
-        
-
-        private void InitializeGrid()
+        public int NumberOfRows => numberOfRows;
+        public int NumberOfColumns => numberOfColumns;
+        public Dictionary<Vector2Int, SidelineBlock> SidelineGrid => sidelineGrid;
+        public Dictionary<Vector2Int, SquareBlock> SquareGrid => squareGrid;
+        public bool TryGetSidelineBlock(Vector2Int gridPos, out SidelineBlock block)
         {
-            InitializeDotGrid(numberOfColumns, numberOfRows, blockSize);
-            InitializeSquareGrid(numberOfColumns, numberOfRows, blockSize);
-            InitializeSideGrid(numberOfColumns, numberOfRows, blockSize);
-            InitializeGhostGrid(numberOfColumns, numberOfRows, blockSize);
+            return sidelineGrid.TryGetValue(gridPos, out block);
         }
 
-        private void InitializeDotGrid(int gridSizeX, int gridSizeY, float cellSize)
+        public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
         {
-            var dots = GridPlacer<DotBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize, blockCatalog.dotBlockPrefab, gameObject);
-            GridPlacer<DotBlock>.PositionTheGridAtCenter(dots, gridSizeX, gridSizeY, cellSize, "DotParent");
-
+            return !sidelineGrid.ContainsKey(gridPos);
         }
 
-        private void InitializeSquareGrid(int gridSizeX, int gridSizeY, float cellSize)
+        public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
         {
-            var squares = GridPlacer<SquareBlock>.Place(gridSizeX, gridSizeY, cellSize, blockCatalog.squareBlockPrefab,
-                gameObject);
-            GridPlacer<SquareBlock>.PositionTheGridAtCenter(squares, gridSizeX, gridSizeY, cellSize, "SquareParent");
+            if (!sidelineGrid.TryAdd(gridPos, lineBlock)) return false;
+            MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
+            return true;
         }
 
-        private void InitializeSideGrid(int gridSizeX, int gridSizeY, float cellSize)
+        public bool HasHorizontalLine(int x, int y)
         {
-            var horizontalLines = GridPlacer<SidelineBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
-                blockCatalog.horizontalSidelinePrefab);
-            var verticalLines = GridPlacer<SidelineBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
-                blockCatalog.verticalSidelinePrefab);
-
-            GridPlacer<SidelineBlock>.PositionTheGridAtCenter(horizontalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
-            GridPlacer<SidelineBlock>.PositionTheGridAtCenter(verticalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
+            return sidelineGrid.TryGetValue(new(x, y), out var line) && line.IsHorizontal;
         }
 
-        private void InitializeGhostGrid(int gridSizeX, int gridSizeY, float cellSize)
+        public bool HasVerticalLine(int x, int y)
         {
-            var ghostDots = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize,
-                blockCatalog.ghostDotBlockPrefab);
-            var ghostHorizon = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
-                blockCatalog.ghostHorizontalSidelineBlockPrefab);
-            var ghostVertical = GridPlacer<GhostBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
-                blockCatalog.ghostVerticalSidelineBlockPrefab);
-
-            GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostDots, gridSizeX, gridSizeY, cellSize, "GhostParent");
-            GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostHorizon, gridSizeX, gridSizeY, cellSize, "GhostParent");
-            GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostVertical, gridSizeX, gridSizeY, cellSize, "GhostParent");
+            return sidelineGrid.TryGetValue(new(x, y), out var line) && !line.IsHorizontal;
         }
 
-        private void OnEnable()
+        public void CreateSquare(int x, int y)
         {
-            EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGrid() );
+            Vector2Int key = new(x, y);
+            if (squareGrid.ContainsKey(key)) return;
+
+            Vector2 worldPos = GridToWorldPosition(key);
+            SquareBlock square = Instantiate(blockCatalog.squareBlockPrefab, worldPos, Quaternion.identity, transform);
+            square.SetPosition(x, y, worldPos.x, worldPos.y);
+            squareGrid.Add(key, square);
+
+            MatchHandler.Instance.CheckForCompletedLines();
         }
 
-        private void OnDisable()
+        public void BlastRow(int row)
         {
-            EventBus.Unsubscribe<LevelInitializeEvent>(e=> InitializeGrid() );
+            for (int x = 0; x < numberOfColumns; x++)
+            {
+                Vector2Int key = new(x, row);
+                if (squareGrid.Remove(key, out var square)) Destroy(square.gameObject);
+            }
+        }
+
+        public void BlastColumn(int column)
+        {
+            for (int y = 0; y < numberOfRows; y++)
+            {
+                Vector2Int key = new(column, y);
+                if (squareGrid.Remove(key, out var square)) Destroy(square.gameObject);
+            }
+        }
+
+        public Vector2 GridToWorldPosition(Vector2Int gridPos)
+        {
+            float x = gridPos.x * blockSize;
+            float y = gridPos.y * blockSize;
+            return new Vector2(x, y);
         }
     }
 }

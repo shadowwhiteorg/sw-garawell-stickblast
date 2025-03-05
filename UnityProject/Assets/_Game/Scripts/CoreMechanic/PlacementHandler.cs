@@ -1,26 +1,41 @@
 ﻿using _Game.BlockSystem;
+using _Game.Managers;
+using _Game.Utils;
 using UnityEngine;
-using System.Collections.Generic;
+
 namespace _Game.CoreMechanic
 {
-    public class PlacementHandler : MonoBehaviour
+    public class PlacementHandler : Singleton<PlacementHandler>
     {
-        public bool TryGetBlockAt( Dictionary<Vector2Int,SidelineBlock> sidelineGrid,Vector2Int gridPos, out SidelineBlock block)
+        public bool TryGetBlockAt(Vector2Int gridPos, out SidelineBlock block)
         {
-            return sidelineGrid.TryGetValue(gridPos, out block);
+            return GridManager.Instance.TryGetSidelineBlock(gridPos, out block);
         }
 
-        public bool IsGridPositionEmpty(Dictionary<Vector2Int, SidelineBlock> sidelineGrid,Vector2Int gridPos, bool isHorizontal)
+        public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
         {
-            return !sidelineGrid.ContainsKey(gridPos);
+            return GridManager.Instance.IsGridPositionEmpty(gridPos, isHorizontal);
         }
 
-        public bool TryPlaceLine(Dictionary<Vector2Int, SidelineBlock> sidelineGrid,Vector2Int gridPos, SidelineBlock lineBlock)
+        public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
         {
-            if (!sidelineGrid.TryAdd(gridPos, lineBlock)) return false;
+            return GridManager.Instance.TryPlaceLine(gridPos, lineBlock);
+        }
 
-            MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
-            return true;
+        public void TryPlaceBlock(SidelineBlock currentBlock, Vector2Int gridPos)
+        {
+            if (currentBlock == null) return;
+
+            if (TryPlaceLine(gridPos, currentBlock))
+            {
+                currentBlock.SetPosition(gridPos.x, gridPos.y, GridManager.Instance.GridToWorldPosition(gridPos).x, GridManager.Instance.GridToWorldPosition(gridPos).y);
+            }
+            else
+            {
+                currentBlock.ResetPosition();
+            }
+
+            GhostBlockHandler.Instance.HideGhostBlock();
         }
     }
 }

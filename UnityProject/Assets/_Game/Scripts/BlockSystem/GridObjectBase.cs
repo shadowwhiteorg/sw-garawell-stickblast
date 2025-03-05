@@ -22,5 +22,10 @@ namespace _Game.BlockSystem
         {
             WorldPosition = worldPosition;
         }
+
+        public void ResetPosition()
+        {
+            // TODO: Get the logic from selection handler -> release selectedObject
+        }
     }
 }

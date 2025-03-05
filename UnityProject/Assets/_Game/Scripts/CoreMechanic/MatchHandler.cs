@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using _Game.BlockSystem;
+using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
 
@@ -24,77 +24,40 @@ namespace _Game.CoreMechanic
             foreach (var pos in squaresToCheck) CheckSquare(pos);
         }
 
-        private void CheckSquare(Dictionary<Vector2Int,SquareBlock> squareGrid,Dictionary<Vector2Int,SidelineBlock> sidelineGrid,Vector2Int squarePos)
+        private void CheckSquare(Vector2Int squarePos)
         {
             int x = squarePos.x, y = squarePos.y;
-            bool hasBottom = HasHorizontalLine(sidelineGrid,x, y);
-            bool hasTop = HasHorizontalLine(sidelineGrid,x, y + 1);
-            bool hasLeft = HasVerticalLine(sidelineGrid,x, y);
-            bool hasRight = HasVerticalLine(sidelineGrid,x + 1, y);
+            bool hasBottom = GridManager.Instance.HasHorizontalLine(x, y);
+            bool hasTop = GridManager.Instance.HasHorizontalLine(x, y + 1);
+            bool hasLeft = GridManager.Instance.HasVerticalLine(x, y);
+            bool hasRight = GridManager.Instance.HasVerticalLine(x + 1, y);
 
             if (hasBottom && hasTop && hasLeft && hasRight)
-                CreateSquare(squareGrid,x, y);
+                GridManager.Instance.CreateSquare(x, y);
         }
 
-        private bool HasHorizontalLine(Dictionary<Vector2Int,SidelineBlock> sidelineGrid,int x, int y) =>
-            sidelineGrid.TryGetValue(new(x, y), out var line) && line.IsHorizontal;
-
-        private bool HasVerticalLine(Dictionary<Vector2Int,SidelineBlock> sidelineGrid,int x, int y) =>
-            sidelineGrid.TryGetValue(new(x, y), out var line) && !line.IsHorizontal;
-
-        private void CreateSquare(Dictionary<Vector2Int,SquareBlock> squareGrid,int x, int y)
+        public void CheckForCompletedLines()
         {
-            Vector2Int key = new(x, y);
-            if (squareGrid.ContainsKey(key)) return;
-
-            Vector2 worldPos = GridToWorldPosition(key);
-            SquareBlock square = Instantiate(squareGrid.squareBlockPrefab, worldPos, Quaternion.identity, transform);
-            square.SetPosition(x, y, worldPos.x, worldPos.y);
-            squareGrid.Add(key, square);
-
-            CheckForCompletedLines();
+            for (int y = 0; y < GridManager.Instance.NumberOfRows; y++) CheckRow(y);
+            for (int x = 0; x < GridManager.Instance.NumberOfColumns; x++) CheckColumn(x);
         }
 
-        private void CheckForCompletedLines()
+        private void CheckRow(int row)
         {
-            for (int y = 0; y < numberOfRows; y++) CheckRow(y);
-            for (int x = 0; x < numberOfColumns; x++) CheckColumn(x);
-        }
-
-        private void CheckRow(Dictionary<Vector2Int,SquareBlock> squareGrid,int row)
-        {
-            for (int x = 0; x < numberOfColumns; x++)
+            for (int x = 0; x < GridManager.Instance.NumberOfColumns; x++)
             {
-                if (!squareGrid.ContainsKey(new(x, row))) return;
+                if (!GridManager.Instance.SquareGrid.ContainsKey(new(x, row))) return;
             }
-            BlastRow(row);
+            GridManager.Instance.BlastRow(row);
         }
 
-        private void BlastRow(Dictionary<Vector2Int,SquareBlock> squareGrid,int row)
+        private void CheckColumn(int column)
         {
-            for (int x = 0; x < numberOfColumns; x++)
+            for (int y = 0; y < GridManager.Instance.NumberOfRows; y++)
             {
-                Vector2Int key = new(x, row);
-                if (squareGrid.Remove(key, out var square)) Destroy(square.gameObject);
+                if (!GridManager.Instance.SquareGrid.ContainsKey(new(column, y))) return;
             }
-        }
-
-        private void CheckColumn(Dictionary<Vector2Int,SquareBlock> squareGrid,int column)
-        {
-            for (int y = 0; y < numberOfRows; y++)
-            {
-                if (!squareGrid.ContainsKey(new(column, y))) return;
-            }
-            BlastColumn(column);
-        }
-
-        private void BlastColumn(Dictionary<Vector2Int,SquareBlock> squareGrid,int column)
-        {
-            for (int y = 0; y < numberOfRows; y++)
-            {
-                Vector2Int key = new(column, y);
-                if (squareGrid.Remove(key, out var square)) Destroy(square.gameObject);
-            }
+            GridManager.Instance.BlastColumn(column);
         }
     }
 }

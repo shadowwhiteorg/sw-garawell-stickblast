@@ -7,6 +7,8 @@ namespace _Game.BlockSystem
     public sealed class SidelineBlock : GridObjectBase, ITouchable
     {
         [SerializeField] private Vector2 touchSize = Vector2.zero;
+        [SerializeField] private bool isHorizontal = false;
+        public bool IsHorizontal => isHorizontal;
         
         private bool _canMove;
         
