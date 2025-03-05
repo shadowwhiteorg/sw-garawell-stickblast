@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a17dd37e045d4c9780bbe0f065171b71, type: 3}
+  m_Name: BlockPrefabCatalog
+  m_EditorClassIdentifier: 
+  horizontalSidelinePrefab: {fileID: 6760432278659007090, guid: 1031e5d579b45754e863fd3b87dfe56b, type: 3}
+  verticalSidelinePrefab: {fileID: 2083440383394300276, guid: afc4c33dc916682488515b2230d5efbd, type: 3}
+  dotBlockPrefab: {fileID: 8471587195329039579, guid: f8d843d095065fb4f9072d507223c5c4, type: 3}
+  squareBlockPrefab: {fileID: 5636973793573420938, guid: aec2016a04634d440b98201b53f7dfdf, type: 3}
+  ghostDotBlockPrefab: {fileID: 6030977386997603786, guid: 100cd25c9ce58944caf880c5aecfccd2, type: 3}
+  ghostVerticalSidelineBlockPrefab: {fileID: 8224505830645476072, guid: 0692f98f6b00f154eb6329576036405d, type: 3}
+  ghostHorizontalSidelineBlockPrefab: {fileID: 5238171022319949513, guid: 60ef55e2ac94aa547be3c559be8ddb58, type: 3}

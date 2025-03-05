@@ -1,7 +1,7 @@
 ﻿using _Game.Interfaces;
 using UnityEngine;
 
-namespace _Game.GridSystem
+namespace _Game.BlockSystem
 {
     public sealed class SidelineBlock : GridObjectBase, ITouchable
     {

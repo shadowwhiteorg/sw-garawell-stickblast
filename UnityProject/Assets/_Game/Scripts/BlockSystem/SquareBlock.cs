@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Game.GridSystem
+namespace _Game.BlockSystem
 {
     public sealed class SquareBlock : GridObjectBase
     {
