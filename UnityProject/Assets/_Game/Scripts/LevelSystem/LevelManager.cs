@@ -24,12 +24,7 @@ namespace _Game.LevelSystem
         {
             InitializeLevel();
         }
-    
-        // private void InitializeLevel()
-        // {
-        //     CreateTouchableBlocks();
-        //     EventBus.Fire(new LevelInitializeEvent());
-        // }
+        
     
         public void CreateTouchableBlocks()
         {
@@ -37,12 +32,32 @@ namespace _Game.LevelSystem
     
             for (int i = 0; i < numberOfTouchableObjects; i++)
             {
-                // Randomly select a shape
-                Shape shape = blockCatalog.shapes[Random.Range(0, blockCatalog.shapes.Count)];
-                var sidelineBlock = CreateTouchableBlock(shape, i);
-                _sidelineBlocks.Add(sidelineBlock);
+                SidelineBlock sidelineBlock = null;
+        
+                // Try to find a valid shape
+                for (int attempt = 0; attempt < blockCatalog.shapes.Count; attempt++)
+                {
+                    Shape shape = blockCatalog.shapes[Random.Range(0, blockCatalog.shapes.Count)];
+
+                    if (GridManager.Instance.CanPlaceShapeAnywhere(shape, out Vector2Int validPosition))
+                    {
+                        sidelineBlock = CreateTouchableBlock(shape, i);
+                        break;
+                    }
+                }
+
+                if (sidelineBlock != null)
+                {
+                    _sidelineBlocks.Add(sidelineBlock);
+                }
+                else
+                {
+                    // TODO: Fire Game Over Event Here!!!
+                    Debug.LogWarning("No valid shape found! Possible game over condition.");
+                }
             }
         }
+
     
         private SidelineBlock CreateTouchableBlock(Shape shape, int index)
         {
@@ -117,7 +132,7 @@ namespace _Game.LevelSystem
             }
             
             MatchHandler.Instance.CheckAllSquares();
-            
+            CreateTouchableBlocks();
             EventBus.Fire(new LevelInitializeEvent());
         }
         

@@ -49,6 +49,26 @@ namespace _Game.GridSystem
 
 
        }
+       
+       public bool CanPlaceShapeAnywhere(Shape shape, out Vector2Int validPosition)
+       {
+           for (int x = 0; x < numberOfColumns; x++)
+           {
+               for (int y = 0; y < numberOfRows; y++)
+               {
+                   Vector2Int gridPos = new Vector2Int(x, y);
+
+                   if (PlacementHandler.Instance.TryPlaceShape(gridPos, shape))
+                   {
+                       validPosition = gridPos;
+                       return true;
+                   }
+               }
+           }
+
+           validPosition = Vector2Int.zero;
+           return false;
+       }
 
 
        

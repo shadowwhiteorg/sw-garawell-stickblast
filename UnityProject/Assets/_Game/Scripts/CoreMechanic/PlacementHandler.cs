@@ -10,7 +10,7 @@ namespace _Game.CoreMechanic
 {
     public class PlacementHandler : Singleton<PlacementHandler>
     {
-        public bool TryPlaceShape(Vector2Int pivotGridPos, Shape shape)
+        public bool TryPlaceShape(Vector2Int pivotGridPos, Shape shape, bool testOnly = true)
         {
             foreach (var line in shape.Lines)
             {
@@ -19,21 +19,25 @@ namespace _Game.CoreMechanic
                     return false;
             }
 
-            foreach (var line in shape.Lines)
+            if (!testOnly)
             {
-                Vector2Int linePos = pivotGridPos + line.offset;
-                SidelineBlock lineBlock = Instantiate(
-                    line.isHorizontal ? 
-                        GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
-                        GridManager.Instance.BlockCatalog.verticalSidelinePrefab,
-                    GridManager.Instance.GridToWorldPosition(linePos),
-                    Quaternion.identity
-                );
-                lineBlock.SetPosition(linePos.x, linePos.y, linePos.x, linePos.y);
-                GridManager.Instance.TryPlaceLine(linePos, lineBlock);
+                foreach (var line in shape.Lines)
+                {
+                    Vector2Int linePos = pivotGridPos + line.offset;
+                    SidelineBlock lineBlock = Instantiate(
+                        line.isHorizontal ? 
+                            GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
+                            GridManager.Instance.BlockCatalog.verticalSidelinePrefab,
+                        GridManager.Instance.GridToWorldPosition(linePos),
+                        Quaternion.identity
+                    );
+                    lineBlock.SetPosition(linePos.x, linePos.y, linePos.x, linePos.y);
+                    GridManager.Instance.TryPlaceLine(linePos, lineBlock);
+                }
             }
 
             return true;
         }
+
     }
 }
