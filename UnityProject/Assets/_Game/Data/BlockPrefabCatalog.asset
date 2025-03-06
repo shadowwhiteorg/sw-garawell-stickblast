@@ -12,6 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17dd37e045d4c9780bbe0f065171b71, type: 3}
   m_Name: BlockPrefabCatalog
   m_EditorClassIdentifier: 
+  shapes:
+  - ShapeType: 0
+    Lines:
+    - offset: {x: 0, y: 0}
+      isHorizontal: 1
+    GhostPrefab: {fileID: 665368449102646985, guid: ddb58265d5fd78d4784ffb69d5fb5787, type: 3}
+  - ShapeType: 1
+    Lines:
+    - offset: {x: 0, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 4527665562465554075, guid: 6ce3932fe7e6ec847b12a8802a0f882b, type: 3}
+  - ShapeType: 8
+    Lines:
+    - offset: {x: 0, y: 0}
+      isHorizontal: 1
+    - offset: {x: 0, y: 0}
+      isHorizontal: 0
+    - offset: {x: 1, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 8302110817786331900, guid: d1e7218bdfdcdd045849d91199583ccd, type: 3}
   horizontalSidelinePrefab: {fileID: 6760432278659007090, guid: 1031e5d579b45754e863fd3b87dfe56b, type: 3}
   verticalSidelinePrefab: {fileID: 2083440383394300276, guid: afc4c33dc916682488515b2230d5efbd, type: 3}
   dotBlockPrefab: {fileID: 8471587195329039579, guid: f8d843d095065fb4f9072d507223c5c4, type: 3}

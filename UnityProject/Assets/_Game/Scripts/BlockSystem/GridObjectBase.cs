@@ -17,10 +17,18 @@ namespace _Game.BlockSystem
             WorldPosition = new Vector2(posX, posY);
             GridPosition = new Vector2Int(column, row);
         }
-
+        
+        
+        
         public void SetWorldPosition(Vector2 worldPosition)
         {
             WorldPosition = worldPosition;
+        }
+
+        public void ResetPosition()
+        {
+            
+            // TODO: Get the logic from selection handler -> release selectedObject
         }
     }
 }

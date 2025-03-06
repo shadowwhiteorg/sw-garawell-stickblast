@@ -8,8 +8,5 @@ namespace _Game.Utils
         public static event Action OnLevelStart;
         public static void FireOnTouch(Vector2 touchPosition) => OnTouch?.Invoke(touchPosition);
         public static void FireOnLevelStart() => OnLevelStart?.Invoke();
-        
-        
-        
     }
 }

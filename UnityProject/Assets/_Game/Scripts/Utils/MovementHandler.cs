@@ -1,22 +1,25 @@
-﻿using System.Collections;
-using _Game.DataStructures;
+﻿// In _Game/Utils/MovementHandler.cs
+using System.Collections;
 using _Game.Enums;
 using UnityEngine;
 
 namespace _Game.Utils
 {
-    public class MovementHandler<T> where T:MonoBehaviour
+    public static class MovementHandler
     {
-        public static void MoveWithEase(MonoBehaviour movingObject, Vector3 targetPosition, float movementSpeed,
-            Easing easing)
+        public static void MoveWithEase(MonoBehaviour movingObject, Vector3 targetPosition, float movementSpeed, Easing easing)
         {
-            movingObject.StartCoroutine(MoveToTarget(movingObject, targetPosition, movementSpeed, easing));
+            movingObject.StartCoroutine(MoveToTarget(movingObject.transform, targetPosition, movementSpeed, easing));
         }
 
-        private static IEnumerator MoveToTarget(MonoBehaviour movingObject, Vector3 targetPosition, float movementSpeed,
-            Easing easing)
+        public static void MoveWithEase(Transform movingTransform, Vector3 targetPosition, float movementSpeed, Easing easing)
         {
-            Vector3 startPosition = movingObject.transform.position;
+            CoroutineRunner.Instance.StartCoroutine(MoveToTarget(movingTransform, targetPosition, movementSpeed, easing));
+        }
+
+        private static IEnumerator MoveToTarget(Transform movingTransform, Vector3 targetPosition, float movementSpeed, Easing easing)
+        {
+            Vector3 startPosition = movingTransform.position;
             float elapsedTime = 0f;
             float journeyLength = Vector3.Distance(startPosition, targetPosition);
 
@@ -25,11 +28,11 @@ namespace _Game.Utils
                 elapsedTime += Time.deltaTime;
                 float t = elapsedTime / (journeyLength / movementSpeed);
                 t = CalculateEasing(easing, t);
-                movingObject.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+                movingTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
                 yield return null;
             }
 
-            movingObject.transform.position = targetPosition;
+            movingTransform.position = targetPosition;
         }
 
         private static float CalculateEasing(Easing easing, float t)
