@@ -190,7 +190,7 @@ namespace _Game.Managers
                 }
             }
 
-            // Remove squares and their lines
+            // Remove squares and their Lines
             foreach (var squarePos in _blastedSquares)
             {
                 int x = squarePos.x, y = squarePos.y;
@@ -201,7 +201,7 @@ namespace _Game.Managers
                     Destroy(square.gameObject);
                 }
 
-                // Remove lines if not part of another square
+                // Remove Lines if not part of another square
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
@@ -225,7 +225,7 @@ namespace _Game.Managers
                 }
             }
 
-            // Remove squares and their lines
+            // Remove squares and their Lines
             foreach (var squarePos in _blastedSquares)
             {
                 int x = squarePos.x, y = squarePos.y;
@@ -236,7 +236,7 @@ namespace _Game.Managers
                     Destroy(square.gameObject);
                 }
 
-                // Remove lines if not part of another square
+                // Remove Lines if not part of another square
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line

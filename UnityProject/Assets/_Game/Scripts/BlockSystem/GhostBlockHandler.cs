@@ -8,31 +8,27 @@ namespace _Game.BlockSystem
 {
     public class GhostBlockHandler : Singleton<GhostBlockHandler>
     {
-        [SerializeField] private GameObject ghostBlockPrefab;
-        private GhostBlock _currentHorizontalGhostBlock;
-        private GhostBlock _currentVerticalGhostBlock;
-        private List<GameObject> _currentGhosts = new();
+        private GameObject _currentGhost;
 
         public void ShowGhostShape(Vector2Int pivotGridPos, Shape shape)
         {
-            HideGhostBlock(); // Clear existing ghost blocks
+            HideGhostBlock(); // Clear existing ghost block
 
-            foreach (var line in shape.lines)
-            {
-                Vector2Int linePos = pivotGridPos + line.offset;
-                GameObject ghost = Instantiate(
-                    shape.ghostPrefab, // Use the Shape-specific ghost prefab
-                    GridManager.Instance.GridToWorldPosition(linePos),
-                    Quaternion.identity
-                );
-                _currentGhosts.Add(ghost);
-            }
+            // Instantiate the shape's ghost prefab
+            _currentGhost = Instantiate(
+                shape.GhostPrefab,
+                GridManager.Instance.GridToWorldPosition(pivotGridPos),
+                Quaternion.identity
+            );
         }
 
         public void HideGhostBlock()
         {
-            foreach (var ghost in _currentGhosts) Destroy(ghost);
-            _currentGhosts.Clear();
+            if (_currentGhost)
+            {
+                Destroy(_currentGhost);
+                _currentGhost = null;
+            }
         }
     }
 }

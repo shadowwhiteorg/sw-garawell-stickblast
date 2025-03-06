@@ -79,3 +79,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   touchSize: {x: 50, y: 50}
   isHorizontal: 1
+  Shape:
+    ShapeType: 0
+    Lines:
+    - offset: {x: 0, y: 0}
+      isHorizontal: 1
+    GhostPrefab: {fileID: 665368449102646985, guid: ddb58265d5fd78d4784ffb69d5fb5787, type: 3}

@@ -40,6 +40,17 @@ namespace _Game.Managers
             {
                 _selectionHandler.ReleaseSelectedObject();
             }
+            
+            
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                LevelManager.Instance.CreateTouchableBlocks();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                LevelManager.Instance.MoveTouchablesIntoScene();
+            }
+            
         }
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4312591924534413034
+--- !u!1001 &6052867217226850383
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -50,7 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7698170725805240020, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
       propertyPath: m_Name
-      value: Block_Sideline_Vertical
+      value: Ghost_Sideline_Vertical Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583054891654834839, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
+      propertyPath: m_Color.a
+      value: 0.29803923
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -58,30 +62,22 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7698170725805240020, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2083440383394300276}
+      addedObject: {fileID: 8224505830645476072}
   m_SourcePrefab: {fileID: 100100000, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
---- !u!1 &5840046100579952702 stripped
+--- !u!1 &4527665562465554075 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7698170725805240020, guid: 45ae0ebea87f61f469bb208ba6cda974, type: 3}
-  m_PrefabInstance: {fileID: 4312591924534413034}
+  m_PrefabInstance: {fileID: 6052867217226850383}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2083440383394300276
+--- !u!114 &8224505830645476072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5840046100579952702}
+  m_GameObject: {fileID: 4527665562465554075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1396394bc81249019e8b5915ae75692a, type: 3}
+  m_Script: {fileID: 11500000, guid: ad410ff96e6d43638a88666346fb8c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchSize: {x: 50, y: 50}
-  isHorizontal: 0
-  Shape:
-    ShapeType: 1
-    Lines:
-    - offset: {x: 0, y: 0}
-      isHorizontal: 0
-    GhostPrefab: {fileID: 4527665562465554075, guid: 6ce3932fe7e6ec847b12a8802a0f882b, type: 3}
