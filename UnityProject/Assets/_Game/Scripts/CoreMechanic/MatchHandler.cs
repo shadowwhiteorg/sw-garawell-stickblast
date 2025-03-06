@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using _Game.GridSystem;
 using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
@@ -22,6 +23,17 @@ namespace _Game.CoreMechanic
             }
 
             foreach (var pos in squaresToCheck) CheckSquare(pos);
+        }
+        
+        public void CheckAllSquares()
+        {
+            for (int x = 0; x < GridManager.Instance.NumberOfColumns; x++)
+            {
+                for (int y = 0; y < GridManager.Instance.NumberOfRows; y++)
+                {
+                    CheckSquare(new Vector2Int(x, y));
+                }
+            }
         }
 
         private void CheckSquare(Vector2Int squarePos)

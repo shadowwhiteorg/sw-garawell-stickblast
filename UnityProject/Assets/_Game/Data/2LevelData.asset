@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f3ca0fd1e041f6973d694564b5fa65, type: 3}
+  m_Name: 2LevelData
+  m_EditorClassIdentifier: 
+  levelNr: 2
+  gridWidth: 5
+  gridHeight: 5
+  initialLines:
+  - gridPosition: {x: 1, y: 3}
+    isHorizontal: 1
+  - gridPosition: {x: 0, y: 3}
+    isHorizontal: 1
+  - gridPosition: {x: 1, y: 2}
+    isHorizontal: 1
+  - gridPosition: {x: 2, y: 2}
+    isHorizontal: 1
+  - gridPosition: {x: 2, y: 3}
+    isHorizontal: 1
+  - gridPosition: {x: 1, y: 3}
+    isHorizontal: 0
+  - gridPosition: {x: 1, y: 2}
+    isHorizontal: 0
+  - gridPosition: {x: 2, y: 2}
+    isHorizontal: 0
+  - gridPosition: {x: 2, y: 3}
+    isHorizontal: 0

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Game.BlockSystem;
+using _Game.CoreMechanic;
 using _Game.DataStructures;
 using _Game.Enums;
 using _Game.GridSystem;
@@ -8,13 +8,14 @@ using _Game.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace _Game.Managers
+namespace _Game.LevelSystem
 {
     public class LevelManager : Singleton<LevelManager>
     { 
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
-        [SerializeField] private BlockCatalog blockCatalog; // Assign BlockCatalog in the Inspector
+        [SerializeField] private BlockCatalog blockCatalog;
+        [SerializeField] private LevelData _levelData;
         private List<SidelineBlock> _sidelineBlocks = new();
     
         public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
@@ -24,11 +25,11 @@ namespace _Game.Managers
             InitializeLevel();
         }
     
-        private void InitializeLevel()
-        {
-            CreateTouchableBlocks();
-            EventBus.Fire(new LevelInitializeEvent());
-        }
+        // private void InitializeLevel()
+        // {
+        //     CreateTouchableBlocks();
+        //     EventBus.Fire(new LevelInitializeEvent());
+        // }
     
         public void CreateTouchableBlocks()
         {
@@ -82,7 +83,7 @@ namespace _Game.Managers
 
             return mainBlock;
         }
-    
+        
         public void MoveTouchablesIntoScene()
         {
             MovementHandler.MoveWithEase(outOfTheSceneTarget,
@@ -99,6 +100,25 @@ namespace _Game.Managers
             var sidelineBlock = CreateTouchableBlock(shape, 0); // Index 0 for debug
             sidelineBlock.transform.position = worldPosition;
             sidelineBlock.SetWorldPosition(worldPosition);
+        }
+        private void InitializeLevel()
+        {
+            // Generate initial lines from LevelData
+            foreach (var line in _levelData.initialLines)
+            {
+                Vector2 worldPos = GridManager.Instance.GridToWorldPosition(line.gridPosition);
+                SidelineBlock prefab = line.isHorizontal ? 
+                    GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
+                    GridManager.Instance.BlockCatalog.verticalSidelinePrefab;
+
+                SidelineBlock lineBlock = Instantiate(prefab, worldPos, Quaternion.identity);
+                lineBlock.SetPosition(line.gridPosition.x, line.gridPosition.y, worldPos.x, worldPos.y);
+                GridManager.Instance.TryPlaceLine(line.gridPosition, lineBlock);
+            }
+            
+            MatchHandler.Instance.CheckAllSquares();
+            
+            EventBus.Fire(new LevelInitializeEvent());
         }
         
     }
