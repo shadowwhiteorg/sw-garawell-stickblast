@@ -1,4 +1,6 @@
-﻿using _Game.Managers;
+﻿using System.Collections.Generic;
+using _Game.DataStructures;
+using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
 
@@ -9,25 +11,28 @@ namespace _Game.BlockSystem
         [SerializeField] private GameObject ghostBlockPrefab;
         private GhostBlock _currentHorizontalGhostBlock;
         private GhostBlock _currentVerticalGhostBlock;
+        private List<GameObject> _currentGhosts = new();
 
-        public void ShowGhostBlock(Vector2Int gridPos, bool isHorizontal)
+        public void ShowGhostShape(Vector2Int pivotGridPos, Shape shape)
         {
-            GhostBlock ghostBlock = isHorizontal ? _currentHorizontalGhostBlock : _currentVerticalGhostBlock;
-            if (!ghostBlock)
-            {
-                ghostBlock = Instantiate(isHorizontal ? GridManager.Instance.BlockCatalog.ghostHorizontalSidelineBlockPrefab : GridManager.Instance.BlockCatalog.ghostVerticalSidelineBlockPrefab);
-                if (isHorizontal) _currentHorizontalGhostBlock = ghostBlock;
-                else _currentVerticalGhostBlock = ghostBlock;
-            }
+            HideGhostBlock(); // Clear existing ghost blocks
 
-            ghostBlock.transform.position = GridManager.Instance.GridToWorldPosition(gridPos);
-            ghostBlock.gameObject.SetActive(true);
+            foreach (var line in shape.lines)
+            {
+                Vector2Int linePos = pivotGridPos + line.offset;
+                GameObject ghost = Instantiate(
+                    shape.ghostPrefab, // Use the Shape-specific ghost prefab
+                    GridManager.Instance.GridToWorldPosition(linePos),
+                    Quaternion.identity
+                );
+                _currentGhosts.Add(ghost);
+            }
         }
 
         public void HideGhostBlock()
         {
-            _currentHorizontalGhostBlock?.gameObject.SetActive(false);
-            _currentVerticalGhostBlock?.gameObject.SetActive(false);
+            foreach (var ghost in _currentGhosts) Destroy(ghost);
+            _currentGhosts.Clear();
         }
     }
 }

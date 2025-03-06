@@ -1,4 +1,5 @@
-﻿using _Game.Interfaces;
+﻿using _Game.DataStructures;
+using _Game.Interfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,8 +7,11 @@ namespace _Game.BlockSystem
 {
     public sealed class SidelineBlock : GridObjectBase, ITouchable
     {
+        
         [SerializeField] private Vector2 touchSize = Vector2.zero;
         [SerializeField] private bool isHorizontal = false;
+        [SerializeField] private Shape shape;
+        public Shape Shape => shape;
         public bool IsHorizontal => isHorizontal;
         
         private bool _canMove;

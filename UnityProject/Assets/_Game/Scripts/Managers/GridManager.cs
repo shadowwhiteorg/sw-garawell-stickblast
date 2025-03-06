@@ -180,21 +180,20 @@ namespace _Game.Managers
         {
             _blastedSquares.Clear();
 
-            // STEP 1: Collect all blasted squares first
-            for (int x = 0; x < NumberOfColumns; x++)
+            // Collect all squares in the row
+            for (int x = 0; x < numberOfColumns; x++)
             {
                 Vector2Int squarePos = new(x, row);
                 if (_squareGrid.ContainsKey(squarePos))
                 {
-                    _blastedSquares.Add(squarePos); // Track blasted squares
+                    _blastedSquares.Add(squarePos);
                 }
             }
 
-            // STEP 2: Remove lines for all blasted squares
+            // Remove squares and their lines
             foreach (var squarePos in _blastedSquares)
             {
-                int x = squarePos.x;
-                int y = squarePos.y;
+                int x = squarePos.x, y = squarePos.y;
 
                 // Remove the square
                 if (_squareGrid.Remove(squarePos, out var square))
@@ -202,11 +201,11 @@ namespace _Game.Managers
                     Destroy(square.gameObject);
                 }
 
-                // Remove lines if not part of another square (outside blasted area)
+                // Remove lines if not part of another square
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line (north)
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line (west)
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line (east)
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
             }
 
             _blastedSquares.Clear();
@@ -216,21 +215,20 @@ namespace _Game.Managers
         {
             _blastedSquares.Clear();
 
-            // STEP 1: Collect all blasted squares first
-            for (int y = 0; y < NumberOfRows; y++)
+            // Collect all squares in the column
+            for (int y = 0; y < numberOfRows; y++)
             {
                 Vector2Int squarePos = new(column, y);
                 if (_squareGrid.ContainsKey(squarePos))
                 {
-                    _blastedSquares.Add(squarePos); // Track blasted squares
+                    _blastedSquares.Add(squarePos);
                 }
             }
 
-            // STEP 2: Remove lines for all blasted squares
+            // Remove squares and their lines
             foreach (var squarePos in _blastedSquares)
             {
-                int x = squarePos.x;
-                int y = squarePos.y;
+                int x = squarePos.x, y = squarePos.y;
 
                 // Remove the square
                 if (_squareGrid.Remove(squarePos, out var square))
@@ -238,11 +236,11 @@ namespace _Game.Managers
                     Destroy(square.gameObject);
                 }
 
-                // Remove lines if not part of another square (outside blasted area)
+                // Remove lines if not part of another square
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line (north)
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line (west)
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line (east)
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
+                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
             }
 
             _blastedSquares.Clear();
@@ -260,79 +258,52 @@ namespace _Game.Managers
                     {
                         blocks.Remove(blockToRemove);
                         Destroy(blockToRemove.gameObject);
-                        Debug.Log($"Removed line at {gridPos} ({(isHorizontal ? "horizontal" : "vertical")}).");
 
                         // If no blocks remain at this position, remove the entry from the dictionary
                         if (blocks.Count == 0)
                         {
                             _sidelineGrid.Remove(gridPos);
-                            Debug.Log($"No blocks left at {gridPos}. Removed from sideline grid.");
                         }
                     }
                 }
             }
-            else
-            {
-                Debug.Log($"Line at {gridPos} ({(isHorizontal ? "horizontal" : "vertical")}) is part of another square. Not removed.");
-            }
         }
         
 
-public bool IsLinePartOfAnotherSquare(Vector2Int gridPos, bool isHorizontal)
-{
-    if (isHorizontal)
-    {
-        // Check the square ABOVE the horizontal line (north)
-        if (gridPos.y < NumberOfRows - 1 && IsSquareComplete(gridPos.x, gridPos.y + 1) && 
-            !_blastedSquares.Contains(new Vector2Int(gridPos.x, gridPos.y + 1)))
+        public bool IsLinePartOfAnotherSquare(Vector2Int gridPos, bool isHorizontal)
         {
-            Debug.Log($"Line at {gridPos} is part of another square above.");
-            return true;
-        }
+            if (isHorizontal)
+            {
+                // Check the square ABOVE the horizontal line
+                if (gridPos.y < numberOfRows - 1 && IsSquareComplete(gridPos.x, gridPos.y + 1) && 
+                    !_blastedSquares.Contains(new Vector2Int(gridPos.x, gridPos.y + 1)))
+                    return true;
 
-        // Check the square BELOW the horizontal line (south)
-        if (gridPos.y > 0 && IsSquareComplete(gridPos.x, gridPos.y - 1) && 
-            !_blastedSquares.Contains(new Vector2Int(gridPos.x, gridPos.y - 1)))
-        {
-            Debug.Log($"Line at {gridPos} is part of another square below.");
-            return true;
-        }
-    }
-    else
-    {
-        // Check the square to the EAST of the vertical line
-        if (gridPos.x < NumberOfColumns - 1 && IsSquareComplete(gridPos.x + 1, gridPos.y) && 
-            !_blastedSquares.Contains(new Vector2Int(gridPos.x + 1, gridPos.y)))
-        {
-            Debug.Log($"Line at {gridPos} is part of another square to the east.");
-            return true;
-        }
+                // Check the square BELOW the horizontal line
+                if (gridPos.y > 0 && IsSquareComplete(gridPos.x, gridPos.y - 1) && 
+                    !_blastedSquares.Contains(new Vector2Int(gridPos.x, gridPos.y - 1)))
+                    return true;
+            }
+            else
+            {
+                // Check the square to the EAST of the vertical line
+                if (gridPos.x < numberOfColumns - 1 && IsSquareComplete(gridPos.x + 1, gridPos.y) && 
+                    !_blastedSquares.Contains(new Vector2Int(gridPos.x + 1, gridPos.y)))
+                    return true;
 
-        // Check the square to the WEST of the vertical line
-        if (gridPos.x > 0 && IsSquareComplete(gridPos.x - 1, gridPos.y) && 
-            !_blastedSquares.Contains(new Vector2Int(gridPos.x - 1, gridPos.y)))
-        {
-            Debug.Log($"Line at {gridPos} is part of another square to the west.");
-            return true;
-        }
-    }
+                // Check the square to the WEST of the vertical line
+                if (gridPos.x > 0 && IsSquareComplete(gridPos.x - 1, gridPos.y) && 
+                    !_blastedSquares.Contains(new Vector2Int(gridPos.x - 1, gridPos.y)))
+                    return true;
+            }
 
-    Debug.Log($"Line at {gridPos} is not part of another square.");
-    return false;
-}
+            return false;
+        }
 
         private bool IsSquareComplete(int x, int y)
         {
-            // Bottom horizontal line (x, y)
-            bool hasBottom = HasHorizontalLine(x, y);
-            // Top horizontal line (x, y + 1)
-            bool hasTop = HasHorizontalLine(x, y + 1);
-            // Left vertical line (x, y)
-            bool hasLeft = HasVerticalLine(x, y);
-            // Right vertical line (x + 1, y)
-            bool hasRight = HasVerticalLine(x + 1, y);
-
-            return hasBottom && hasTop && hasLeft && hasRight;
+            return HasHorizontalLine(x, y) && HasHorizontalLine(x, y + 1) &&
+                   HasVerticalLine(x, y) && HasVerticalLine(x + 1, y);
         }
         
         

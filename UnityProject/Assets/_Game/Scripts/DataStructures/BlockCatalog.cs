@@ -1,4 +1,5 @@
-﻿using _Game.BlockSystem;
+﻿using System.Collections.Generic;
+using _Game.BlockSystem;
 using UnityEngine;
 
 namespace _Game.DataStructures
@@ -6,6 +7,8 @@ namespace _Game.DataStructures
     [CreateAssetMenu(fileName = "BlockCatalog", menuName = "Game/Block Catalog")]
     public class BlockCatalog : ScriptableObject
     {
+        public List<Shape> shapes;
+        
         public SidelineBlock horizontalSidelinePrefab;
         public SidelineBlock verticalSidelinePrefab;
         public DotBlock dotBlockPrefab;
