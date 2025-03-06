@@ -19,6 +19,7 @@ namespace _Game.GridSystem
 
             foreach (var touchable in _interactableTouchables)
             {
+                if (!touchable) return closestTouchable;
                 float distance = Vector2.Distance(touchPosition, touchable.transform.position);
                 if (distance < closestDistance)
                 {
@@ -27,14 +28,6 @@ namespace _Game.GridSystem
                 }
             }
             return closestTouchable;
-        }
-
-        public Vector2 GetSnappedGridPosition(Vector2 worldPosition)
-        {
-            float cellSize = 1.0f; // Adjust based on grid
-            int x = Mathf.RoundToInt(worldPosition.x / cellSize);
-            int y = Mathf.RoundToInt(worldPosition.y / cellSize);
-            return new Vector2(x * cellSize, y * cellSize);
         }
     }
 }
