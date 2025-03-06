@@ -61,7 +61,7 @@ namespace _Game.InputSystem
             );
 
             var shape = _selectedShapeParent.GetComponentInChildren<SidelineBlock>().Shape;
-            if (PlacementHandler.Instance.TryPlaceShape(targetGridPos, shape))
+            if (PlacementHandler.Instance.TryPlaceShape(targetGridPos, shape, false))
             {
                 // Successfully placed - destroy the original shape
                 MonoBehaviour.Destroy(_selectedShapeParent);

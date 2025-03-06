@@ -18,9 +18,9 @@ namespace _Game.CoreMechanic
                 if (!GridManager.Instance.IsGridPositionEmpty(linePos, line.isHorizontal))
                     return false;
             }
-
             if (!testOnly)
             {
+                EventBus.Fire(new ObjectPlacedEvent());
                 foreach (var line in shape.Lines)
                 {
                     Vector2Int linePos = pivotGridPos + line.offset;

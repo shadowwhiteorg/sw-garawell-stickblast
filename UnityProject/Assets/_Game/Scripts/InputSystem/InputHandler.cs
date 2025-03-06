@@ -45,11 +45,11 @@ namespace _Game.Managers
             
             if (Input.GetKeyDown(KeyCode.K))
             {
-                LevelManager.Instance.CreateTouchableBlocks();
+                LevelCreator.Instance.CreateTouchableBlocks();
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                LevelManager.Instance.MoveTouchablesIntoScene();
+                LevelCreator.Instance.MoveTouchablesIntoScene();
             }
             
         }

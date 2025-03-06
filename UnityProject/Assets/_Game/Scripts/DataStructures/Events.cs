@@ -8,4 +8,6 @@ namespace _Game.DataStructures
     public struct LevelInitializeEvent { }
     public struct LevelStartEvent { }
     
+    public struct ObjectPlacedEvent { }
+    
 }
