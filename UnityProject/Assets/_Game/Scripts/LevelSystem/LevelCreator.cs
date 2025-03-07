@@ -79,7 +79,7 @@ namespace _Game.LevelSystem
                     GridManager.Instance.BlockCatalog.verticalSidelinePrefab;
 
                 var lineBlock = Instantiate(prefab, shapeParent.transform, true);
-                lineBlock.transform.localPosition = (Vector3)(Vector2)line.offset * GridManager.Instance.BlockSize;
+                lineBlock.transform.localPosition = (Vector3)(Vector2)line.gridPosition * GridManager.Instance.BlockSize;
 
                 lineBlock.Shape = shape;
                 

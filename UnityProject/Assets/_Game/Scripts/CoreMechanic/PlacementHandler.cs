@@ -14,7 +14,7 @@ namespace _Game.CoreMechanic
         {
             foreach (var line in shape.Lines)
             {
-                Vector2Int linePos = pivotGridPos + line.offset;
+                Vector2Int linePos = pivotGridPos + line.gridPosition;
                 if (!GridManager.Instance.IsGridPositionEmpty(linePos, line.isHorizontal))
                     return false;
             }
@@ -23,7 +23,7 @@ namespace _Game.CoreMechanic
                 EventBus.Fire(new ObjectPlacedEvent());
                 foreach (var line in shape.Lines)
                 {
-                    Vector2Int linePos = pivotGridPos + line.offset;
+                    Vector2Int linePos = pivotGridPos + line.gridPosition;
                     SidelineBlock lineBlock = Instantiate(
                         line.isHorizontal ? 
                             GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
