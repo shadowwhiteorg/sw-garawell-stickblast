@@ -11,9 +11,10 @@ namespace _Game.LevelSystem
     {
         [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
         private int _currentLevel;
+        private bool _hasLevelStarted;
         public int CurrentLevel =>PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
-
-        public LevelData CurrentLevelData => _levelDataList[CurrentLevel % _levelDataList.Count];
+        public LevelData CurrentLevelData => _levelDataList.Count > 0 ? _levelDataList[CurrentLevel % _levelDataList.Count] : null;
+        
     
         private void Start()
         {

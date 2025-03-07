@@ -37,19 +37,19 @@ namespace _Game.LevelSystem
             for (int i = 0; i < numberOfTouchableObjects; i++)
             {
                 SidelineBlock sidelineBlock = null;
-        
+            
                 // Try to find a valid shape
                 for (int attempt = 0; attempt < blockCatalog.shapes.Count; attempt++)
                 {
                     Shape shape = blockCatalog.shapes[Random.Range(0, blockCatalog.shapes.Count)];
-
+            
                     if (GridManager.Instance.CanPlaceShapeAnywhere(shape, out Vector2Int validPosition))
                     {
                         sidelineBlock = CreateTouchableBlock(shape, i);
                         break;
                     }
                 }
-
+            
                 if (sidelineBlock != null)
                 {
                     _sidelineBlocks.Add(sidelineBlock);
@@ -132,9 +132,9 @@ namespace _Game.LevelSystem
                 GridManager.Instance.TryPlaceLine(line.gridPosition, lineBlock);
             }
             
-            MatchHandler.Instance.CheckAllSquares();
-            CreateTouchableBlocks();
             EventBus.Fire(new OnLevelInitializeEvent());
+            CreateTouchableBlocks();
+            // MatchHandler.Instance.CheckAllSquares();
         }
 
         private void ResetLevel()

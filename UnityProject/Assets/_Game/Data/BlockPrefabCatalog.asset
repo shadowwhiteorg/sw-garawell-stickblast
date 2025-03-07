@@ -35,6 +35,52 @@ MonoBehaviour:
       isHorizontal: 0
     GhostPrefab: {fileID: 8302110817786331900, guid: d1e7218bdfdcdd045849d91199583ccd, type: 3}
     VisualPrefab: {fileID: 896993953914070103, guid: 7518ca2b1f94474448d4ae77f40059b5, type: 3}
+  - ShapeType: 9
+    Lines:
+    - gridPosition: {x: 0, y: 1}
+      isHorizontal: 1
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 0
+    - gridPosition: {x: 1, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 8694930948298043112, guid: e38edb306ec0594459d94e64402b99b3, type: 3}
+    VisualPrefab: {fileID: 7958339079755361414, guid: a2a4a7fc5c5b68f4e9a84139bd6f3a9b, type: 3}
+  - ShapeType: 7
+    Lines:
+    - gridPosition: {x: 0, y: 1}
+      isHorizontal: 1
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 1
+    - gridPosition: {x: 1, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 2341886319222188052, guid: ab12c49dc395761448d8852d7d4e0f92, type: 3}
+    VisualPrefab: {fileID: 3380613085266174069, guid: 36361bcc0fcf6084abf36348988ccf3d, type: 3}
+  - ShapeType: 6
+    Lines:
+    - gridPosition: {x: 0, y: 1}
+      isHorizontal: 1
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 1
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 7571075758633582718, guid: 41f661156eaf7fd40b9f58d0b8fdd8d1, type: 3}
+    VisualPrefab: {fileID: 555516986422424077, guid: 5e7d816507a53684c96b4637a20287b0, type: 3}
+  - ShapeType: 3
+    Lines:
+    - gridPosition: {x: 1, y: 0}
+      isHorizontal: 0
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 1
+    GhostPrefab: {fileID: 8057585512605759103, guid: d9d7666b3f4412c479d84f2246a79b13, type: 3}
+    VisualPrefab: {fileID: 2128450392789045219, guid: d830336a83a7200469d783cbfe868b5e, type: 3}
+  - ShapeType: 5
+    Lines:
+    - gridPosition: {x: 0, y: 1}
+      isHorizontal: 1
+    - gridPosition: {x: 1, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 8713619208637811817, guid: abea24ed6202b434193ceba44cb0b525, type: 3}
+    VisualPrefab: {fileID: 5933328689624126563, guid: fe90987b1a06f71469f47080d803fd28, type: 3}
   horizontalSidelinePrefab: {fileID: 6760432278659007090, guid: 1031e5d579b45754e863fd3b87dfe56b, type: 3}
   verticalSidelinePrefab: {fileID: 2083440383394300276, guid: afc4c33dc916682488515b2230d5efbd, type: 3}
   dotBlockPrefab: {fileID: 8471587195329039579, guid: f8d843d095065fb4f9072d507223c5c4, type: 3}

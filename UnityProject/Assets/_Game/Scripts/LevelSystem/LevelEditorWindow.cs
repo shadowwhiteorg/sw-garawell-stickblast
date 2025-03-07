@@ -13,7 +13,7 @@ namespace _Game.LevelSystem
         private int _levelNr;
         private bool _isHorizontal = true;
 
-        private const string LevelDataPath = "Assets/_Game/Data/";
+        private const string LevelDataPath = "Assets/_Game/Data/Level/";
 
         [MenuItem("Window/Level Editor")]
         public static void ShowWindow()

@@ -1,15 +1,16 @@
 ﻿using System;
 using _Game.DataStructures;
 using _Game.LevelSystem;
-using _Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
+using EventBus = _Game.Utils.EventBus;
 
 namespace _Game.Managers
 {
-    public class UIManager : Singleton<UIManager>
+    public class UIManager : Utils.Singleton<UIManager>
     {
         [SerializeField] private GameObject inGamePanel;
         [SerializeField] private TextMeshProUGUI levelText;
@@ -32,7 +33,8 @@ namespace _Game.Managers
         
         private LevelManager _levelManager;
         private ScoreSystem _scoreSystem;
-        private bool isRocketActive;
+        private bool _isRocketActive;
+        private bool _isLevelStarted;
         
         private void Initialize()
         {
@@ -57,10 +59,12 @@ namespace _Game.Managers
             {
                 EventBus.Fire(new OnRocketSelected());
             });
+            _isLevelStarted = true;
         }
 
         private void UpdatePointUI()
         {
+            if(!_isLevelStarted) return;
             scoreText.text =  _scoreSystem.CurrentScore + " / " + _scoreSystem.TargetScore;
             scoreSlider.value = (float)_scoreSystem.CurrentScore / _scoreSystem.TargetScore;
         }
@@ -84,6 +88,7 @@ namespace _Game.Managers
             winLevelPanel?.SetActive(false);
             loseLevelPanel?.SetActive(false);
             inGamePanel?.SetActive(true);
+            
         }
 
         public void PlaySelectSound()
@@ -91,10 +96,16 @@ namespace _Game.Managers
             audioSource.PlayOneShot(selectSound);
         }
 
+        public void PlayMatchSount()
+        {
+            if(_isLevelStarted)
+                audioSource.PlayOneShot(matchSound);
+        }
+
         private void ActivateRocketSkill()
         {
-            isRocketActive = !isRocketActive;
-            activeRocketParent.SetActive(isRocketActive);
+            _isRocketActive = !_isRocketActive;
+            activeRocketParent.SetActive(_isRocketActive);
         }
 
         private void OnEnable()
@@ -106,7 +117,7 @@ namespace _Game.Managers
             EventBus.Subscribe<OnLevelWinEvent>(@event => OpenLevelEnd(true));
             EventBus.Subscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false));
             EventBus.Subscribe<OnObjectPlacedEvent>(@event => audioSource.PlayOneShot(dropSound));
-            EventBus.Subscribe<OnSquareCreatedEvent>(@event => audioSource.PlayOneShot(matchSound));
+            EventBus.Subscribe<OnSquareCreatedEvent>(@event => PlayMatchSount());
             EventBus.Subscribe<OnBlastEvent>(@event => audioSource.PlayOneShot(blastSound));
             EventBus.Subscribe<OnBlastEvent>(@event => ActivateRocketSkill());
             EventBus.Subscribe<OnRocketSelected>(@event => ActivateRocketSkill());
@@ -121,10 +132,8 @@ namespace _Game.Managers
             EventBus.Unsubscribe<OnLevelWinEvent>(@event => OpenLevelEnd(true));
             EventBus.Unsubscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false));
             EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => audioSource.PlayOneShot(dropSound));
-            EventBus.Unsubscribe<OnSquareCreatedEvent>(@event => audioSource.PlayOneShot(matchSound));
+            EventBus.Unsubscribe<OnSquareCreatedEvent>(@event =>  PlayMatchSount());
             EventBus.Unsubscribe<OnBlastEvent>(@event => audioSource.PlayOneShot(blastSound));
-            // EventBus.Unsubscribe<OnBlastEvent>(@event => ActivateRocketSkill());
-            // EventBus.Unsubscribe<OnRocketSelected>(@event => ActivateRocketSkill());
         }
     }
 }
