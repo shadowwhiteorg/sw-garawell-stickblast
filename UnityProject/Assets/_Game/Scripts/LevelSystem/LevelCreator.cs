@@ -23,11 +23,7 @@ namespace _Game.LevelSystem
         
         public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
         public int NumberOfTouchableObjects => numberOfTouchableObjects;
-    
-        private void Start()
-        {
-            InitializeLevel();
-        }
+        
         
         public void CreateTouchableBlocks()
         {
@@ -70,7 +66,7 @@ namespace _Game.LevelSystem
             GameObject shapeParent = new GameObject($"Shape_{shape.ShapeType}");
             shapeParent.transform.SetParent(outOfTheSceneTarget.transform, false);
 
-            Vector3 parentPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize*3);
+            Vector3 parentPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize*2);
             shapeParent.transform.localPosition = parentPosition;
 
             SidelineBlock mainBlock = null;
@@ -101,7 +97,7 @@ namespace _Game.LevelSystem
         public void MoveTouchablesIntoScene()
         {
             MovementHandler.MoveWithEase(outOfTheSceneTarget,
-                new Vector3(0, outOfTheSceneTarget.Position.y, 0), 35, Easing.OutBack);
+                new Vector3(-1.5f, outOfTheSceneTarget.Position.y, 0), 35, Easing.OutBack);
         }
     
         public void SpawnRandomShape(Vector2 worldPosition)
