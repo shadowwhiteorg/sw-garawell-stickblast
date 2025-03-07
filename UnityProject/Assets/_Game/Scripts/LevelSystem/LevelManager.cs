@@ -13,7 +13,7 @@ namespace _Game.LevelSystem
         private int _currentLevel;
         public int CurrentLevel =>PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
 
-        public LevelData CurrentLevelData => _levelDataList[0];
+        public LevelData CurrentLevelData => _levelDataList[CurrentLevel % _levelDataList.Count];
     
         private void Start()
         {
@@ -26,6 +26,15 @@ namespace _Game.LevelSystem
             _currentLevel++;
             PlayerPrefs.SetInt(GameConstants.PlayerPrefsLevel,_currentLevel);
         }
-        
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<OnLevelWinEvent>(e=> IncrementLevel() );
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<OnLevelWinEvent>(e => IncrementLevel());
+        }
     }
 }

@@ -3,7 +3,6 @@ using _Game.BlockSystem;
 using _Game.CoreMechanic;
 using _Game.DataStructures;
 using _Game.InputSystem;
-using _Game.LevelSystem;
 using _Game.Utils;
 using UnityEngine;
 
@@ -34,18 +33,29 @@ namespace _Game.GridSystem
         
         private void InitializeGrid()
        {
-           InitializeDotGrid(numberOfColumns, numberOfRows, blockSize);
+           ClearGrid();
            _selectionHandler = new SelectionHandler();
-           // InitializeSquareGrid(numberOfColumns, numberOfRows, blockSize);
-           // InitializeSideGrid(numberOfColumns, numberOfRows, blockSize);
-           // InitializeGhostGrid(numberOfColumns, numberOfRows, blockSize);
+           InitializeDotGrid(numberOfColumns, numberOfRows, blockSize);
+           InitializeSideGrid(numberOfColumns, numberOfRows, blockSize);
        }
+        private void InitializeSideGrid(int gridSizeX, int gridSizeY, float cellSize)
+        {
+            var horizontalLines = GridPlacer<SidelineBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
+                blockCatalog.ghostHorizontalSidelineBlockPrefab,this.gameObject);
+            var verticalLines = GridPlacer<SidelineBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
+                blockCatalog.ghostVerticalSidelineBlockPrefab,this.gameObject);
+
+
+            GridPlacer<SidelineBlock>.PositionTheGridAtCenter(horizontalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent",this.transform);
+            GridPlacer<SidelineBlock>.PositionTheGridAtCenter(verticalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent",this.transform);
+        }
+        
 
 
        private void InitializeDotGrid(int gridSizeX, int gridSizeY, float cellSize)
        {
-           var dots = GridPlacer<DotBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize, blockCatalog.dotBlockPrefab, gameObject);
-           GridPlacer<DotBlock>.PositionTheGridAtCenter(dots, gridSizeX, gridSizeY, cellSize, "DotParent");
+           var dots = GridPlacer<DotBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize, blockCatalog.dotBlockPrefab, this.gameObject);
+           GridPlacer<DotBlock>.PositionTheGridAtCenter(dots, gridSizeX, gridSizeY, cellSize, "DotParent", this.transform);
 
 
        }
@@ -58,7 +68,7 @@ namespace _Game.GridSystem
                {
                    Vector2Int gridPos = new Vector2Int(x, y);
 
-                   if (PlacementHandler.Instance.TryPlaceShape(gridPos, shape))
+                   if (PlacementHandler.Instance.TryPlaceShape(gridPos, shape,this.transform))
                    {
                        validPosition = gridPos;
                        return true;
@@ -73,31 +83,36 @@ namespace _Game.GridSystem
 
        
        
-       public bool IsGridPositionValid(Vector2Int gridPos)
+       public bool IsGridPositionValid(Vector2Int gridPos, bool isHorizontal = false, bool checkForGhost = false)
        {
+           if (checkForGhost)
+           {
+               int columns = isHorizontal ? numberOfColumns : numberOfColumns +1;
+               int rows = isHorizontal ? numberOfRows +1: numberOfRows;
+               return gridPos.x >= 0 && gridPos.x < columns && 
+                      gridPos.y >= 0 && gridPos.y < rows;
+           }
            return gridPos.x >= 0 && gridPos.x < numberOfColumns+1 && 
                   gridPos.y >= 0 && gridPos.y < numberOfRows+1;
+           
        }
 
         
-       public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal)
+       public bool IsGridPositionEmpty(Vector2Int gridPos, bool isHorizontal, bool checkForGhost = false)
        {
-           if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
+           if (!IsGridPositionValid(gridPos,isHorizontal,checkForGhost)) return false; 
 
-           // Check if any block at the position has the same orientation
            if (_sidelineGrid.TryGetValue(gridPos, out var blocks))
            {
                foreach (var block in blocks)
                {
                    if (block.IsHorizontal == isHorizontal)
                    {
-                       // A block with the same orientation already exists
+                       
                        return false;
                    }
                }
            }
-
-           // No block with the same orientation exists
            return true;
        }
 
@@ -112,7 +127,8 @@ namespace _Game.GridSystem
                _sidelineGrid[gridPos] = blocks;
            }
            blocks.Add(lineBlock);
-
+           lineBlock.ShowModel(true);
+           lineBlock.transform.SetParent(this.transform);
            MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
            return true;
        }
@@ -140,7 +156,7 @@ namespace _Game.GridSystem
             SquareBlock square = Instantiate(blockCatalog.squareBlockPrefab, worldPos, Quaternion.identity, transform);
             square.SetPosition(x, y, worldPos.x, worldPos.y);
             _squareGrid.Add(key, square);
-
+            EventBus.Fire(new OnSquareCreatedEvent());
             MatchHandler.Instance.CheckForCompletedLines();
         }
 
@@ -183,7 +199,6 @@ namespace _Game.GridSystem
         {
             _blastedSquares.Clear();
 
-            // Collect all squares in the column
             for (int y = 0; y < numberOfRows; y++)
             {
                 Vector2Int squarePos = new(column, y);
@@ -193,18 +208,15 @@ namespace _Game.GridSystem
                 }
             }
 
-            // Remove squares and their Lines
             foreach (var squarePos in _blastedSquares)
             {
                 int x = squarePos.x, y = squarePos.y;
 
-                // Remove the square
                 if (_squareGrid.Remove(squarePos, out var square))
                 {
                     Destroy(square.gameObject);
                 }
 
-                // Remove Lines if not part of another square
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
@@ -277,15 +289,26 @@ namespace _Game.GridSystem
         
         private void OnEnable()
         {
-            EventBus.Subscribe<OnLevelInitializeEvent>(e=> InitializeGrid() );
+            EventBus.Subscribe<OnLevelStartEvent>(e=> InitializeGrid() );
+            EventBus.Subscribe<OnLevelWinEvent>(e=> ClearGrid() );
+            EventBus.Subscribe<OnLevelLoseEvent>(e=> ClearGrid() );
+            // EventBus.Subscribe<OnLevelStartEvent>(e=> ClearGrid() );
+            
         }
+
+        // private void ClearLines()
+        // {
+        //     for (int i = 0; i < this.transform.childCount; i++)
+        //     {
+        //         Destroy(transform.GetChild(i).gameObject);
+        //     }
+        // }
         
         public void ClearGrid()
         {
             _sidelineGrid.Clear();
             _squareGrid.Clear();
 
-            // Destroy all line and square objects
             foreach (Transform child in transform)
             {
                 Destroy(child.gameObject);
@@ -295,10 +318,11 @@ namespace _Game.GridSystem
         public void InitializeGrid(LevelData levelData)
         {
             ClearGrid();
-            // Initialize grid size based on levelData
             numberOfColumns = levelData.GridWidth;
             numberOfRows = levelData.GridHeight;
             InitializeGrid();
         }
+        
+        
     }
 }

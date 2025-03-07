@@ -15,27 +15,30 @@ MonoBehaviour:
   shapes:
   - ShapeType: 0
     Lines:
-    - offset: {x: 0, y: 0}
+    - gridPosition: {x: 0, y: 0}
       isHorizontal: 1
-    GhostPrefab: {fileID: 665368449102646985, guid: ddb58265d5fd78d4784ffb69d5fb5787, type: 3}
+    GhostPrefab: {fileID: 8043843919953549629, guid: c32d714b2e155a14c801f5b422e29f45, type: 3}
+    VisualPrefab: {fileID: 393418123011962656, guid: 10550069eb40f2a47a4a06d674e80581, type: 3}
   - ShapeType: 1
     Lines:
-    - offset: {x: 0, y: 0}
+    - gridPosition: {x: 0, y: 0}
       isHorizontal: 0
-    GhostPrefab: {fileID: 4527665562465554075, guid: 6ce3932fe7e6ec847b12a8802a0f882b, type: 3}
+    GhostPrefab: {fileID: 8976794320189130747, guid: b24b2bc0598725b48adb76567b64699c, type: 3}
+    VisualPrefab: {fileID: 1297669882988696243, guid: 8f14f6666551065488829b6f4e2af8df, type: 3}
   - ShapeType: 8
     Lines:
-    - offset: {x: 0, y: 0}
+    - gridPosition: {x: 0, y: 0}
       isHorizontal: 1
-    - offset: {x: 0, y: 0}
+    - gridPosition: {x: 0, y: 0}
       isHorizontal: 0
-    - offset: {x: 1, y: 0}
+    - gridPosition: {x: 1, y: 0}
       isHorizontal: 0
     GhostPrefab: {fileID: 8302110817786331900, guid: d1e7218bdfdcdd045849d91199583ccd, type: 3}
+    VisualPrefab: {fileID: 896993953914070103, guid: 7518ca2b1f94474448d4ae77f40059b5, type: 3}
   horizontalSidelinePrefab: {fileID: 6760432278659007090, guid: 1031e5d579b45754e863fd3b87dfe56b, type: 3}
   verticalSidelinePrefab: {fileID: 2083440383394300276, guid: afc4c33dc916682488515b2230d5efbd, type: 3}
   dotBlockPrefab: {fileID: 8471587195329039579, guid: f8d843d095065fb4f9072d507223c5c4, type: 3}
   squareBlockPrefab: {fileID: 5636973793573420938, guid: aec2016a04634d440b98201b53f7dfdf, type: 3}
   ghostDotBlockPrefab: {fileID: 6030977386997603786, guid: 100cd25c9ce58944caf880c5aecfccd2, type: 3}
-  ghostVerticalSidelineBlockPrefab: {fileID: 8224505830645476072, guid: 0692f98f6b00f154eb6329576036405d, type: 3}
-  ghostHorizontalSidelineBlockPrefab: {fileID: 5238171022319949513, guid: 60ef55e2ac94aa547be3c559be8ddb58, type: 3}
+  ghostVerticalSidelineBlockPrefab: {fileID: 3866781208723819141, guid: a9c82a47370f30d40bd40a1f9c9e9a8a, type: 3}
+  ghostHorizontalSidelineBlockPrefab: {fileID: 1046248085159284846, guid: 99fc55202956f294f913c7f65db118ea, type: 3}

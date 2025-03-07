@@ -10,7 +10,7 @@ namespace _Game.CoreMechanic
 {
     public class PlacementHandler : Singleton<PlacementHandler>
     {
-        public bool TryPlaceShape(Vector2Int pivotGridPos, Shape shape, bool testOnly = true)
+        public bool TryPlaceShape(Vector2Int pivotGridPos, Shape shape, bool testOnly = true, Transform parent = null)
         {
             foreach (var line in shape.Lines)
             {
@@ -20,7 +20,6 @@ namespace _Game.CoreMechanic
             }
             if (!testOnly)
             {
-                EventBus.Fire(new OnObjectPlacedEvent{ObjectCount = shape.Lines.Count});
                 foreach (var line in shape.Lines)
                 {
                     Vector2Int linePos = pivotGridPos + line.gridPosition;
@@ -29,11 +28,13 @@ namespace _Game.CoreMechanic
                             GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
                             GridManager.Instance.BlockCatalog.verticalSidelinePrefab,
                         GridManager.Instance.GridToWorldPosition(linePos),
-                        Quaternion.identity
+                        Quaternion.identity, parent
                     );
                     lineBlock.SetPosition(linePos.x, linePos.y, linePos.x, linePos.y);
                     GridManager.Instance.TryPlaceLine(linePos, lineBlock);
                 }
+                EventBus.Fire(new OnObjectPlacedEvent{ObjectCount = shape.Lines.Count});
+
             }
 
             return true;

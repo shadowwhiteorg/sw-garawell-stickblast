@@ -32,9 +32,9 @@ namespace _Game.InputSystem
             // Lift the shape slightly
             MovementHandler.MoveWithEase(
                 _selectedShapeParent.transform,
-                (Vector3)worldPos + InputHandler.Instance.InitialTouchableXOffset * Vector3.up,
+                (Vector3)touchPosition + InputHandler.Instance.InitialTouchableXOffset * Vector3.up,
                 50,
-                Easing.OutSine
+                Easing.InSine
             );
 
             return selectedBlock;
@@ -45,10 +45,10 @@ namespace _Game.InputSystem
             if (!_selectedShapeParent) return;
 
             // Move the shape to the touch position with the gridPosition
-            _selectedShapeParent.transform.position = touchPosition + _dragOffset;
+            _selectedShapeParent.transform.position = touchPosition + (Vector2)(InputHandler.Instance.InitialTouchableXOffset * Vector3.up);
 
             // Update ghost positions
-            Vector2Int gridPos = GridManager.Instance.WorldToGridPosition(_selectedShapeParent.transform.position);
+            Vector2Int gridPos = GridManager.Instance.WorldToGridPosition(_selectedShapeParent.transform.position + Vector3.up*2);
             GhostBlockHandler.Instance.ShowGhostShape(gridPos, _selectedShapeParent.GetComponentInChildren<SidelineBlock>().Shape);
         }
 
@@ -57,7 +57,7 @@ namespace _Game.InputSystem
             if (!_selectedShapeParent) return;
 
             Vector2Int targetGridPos = GridManager.Instance.WorldToGridPosition(
-                _selectedShapeParent.transform.position
+                _selectedShapeParent.transform.position + Vector3.up * 2
             );
 
             var shape = _selectedShapeParent.GetComponentInChildren<SidelineBlock>().Shape;

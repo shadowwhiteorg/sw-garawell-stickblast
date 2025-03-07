@@ -21,7 +21,6 @@ namespace _Game.CoreMechanic
                 squaresToCheck.Add(new(linePos.x - 1, linePos.y)); // Square left
                 squaresToCheck.Add(linePos);                       // Square current
             }
-
             foreach (var pos in squaresToCheck) CheckSquare(pos);
         }
         
@@ -43,7 +42,6 @@ namespace _Game.CoreMechanic
             bool hasTop = GridManager.Instance.HasHorizontalLine(x, y + 1);
             bool hasLeft = GridManager.Instance.HasVerticalLine(x, y);
             bool hasRight = GridManager.Instance.HasVerticalLine(x + 1, y);
-
             if (hasBottom && hasTop && hasLeft && hasRight)
                 GridManager.Instance.CreateSquare(x, y);
         }

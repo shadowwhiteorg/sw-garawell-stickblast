@@ -14,7 +14,7 @@ namespace _Game.DataStructures
         public DotBlock dotBlockPrefab;
         public SquareBlock squareBlockPrefab;
         public GhostBlock ghostDotBlockPrefab;
-        public GhostBlock ghostVerticalSidelineBlockPrefab;
-        public GhostBlock ghostHorizontalSidelineBlockPrefab;
+        public SidelineBlock ghostVerticalSidelineBlockPrefab;
+        public SidelineBlock ghostHorizontalSidelineBlockPrefab;
     }
 }

@@ -3,8 +3,6 @@ using UnityEngine;
 
 namespace _Game.DataStructures
 {
-    public struct TouchBeginEvent { public Vector2 Position; }
-    public struct TouchFinishEvent { public Vector2 Position; }
     
     public struct OnLevelInitializeEvent { }
     public struct OnLevelStartEvent { }
@@ -19,6 +17,8 @@ namespace _Game.DataStructures
     {
         public int ObjectCount;
     }
+    
+    public struct OnSquareCreatedEvent{}
 
     public struct OnBlastEvent 
     {

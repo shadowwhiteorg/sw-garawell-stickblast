@@ -10,7 +10,9 @@ namespace _Game.Managers
     public class InputHandler : Singleton<InputHandler>
     {
         [SerializeField] private float initialTouchableXOffset = 0.5f;
+        [SerializeField] private float selectRange = 5f;
         public float InitialTouchableXOffset => initialTouchableXOffset;
+        public float SelectRange => selectRange;
 
         private SelectionHandler _selectionHandler;
         private Camera _camera;

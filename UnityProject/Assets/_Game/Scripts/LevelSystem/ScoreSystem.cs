@@ -44,6 +44,13 @@ namespace _Game.LevelSystem
             }
         }
 
+        private void ResetCounters()
+        {
+            _currentScore = 0;
+            _movementCounter = 0;
+            _placementCounter = 0;
+        }
+
         public void CountMovements()
         {
             _movementCounter++;
@@ -66,7 +73,8 @@ namespace _Game.LevelSystem
         {
             EventBus.Subscribe<OnObjectPlacedEvent>(@event => CountPlacements());
             EventBus.Subscribe<OnObjectPlacedEvent>(@event => CountMovements());
-            EventBus.Subscribe<OnObjectPlacedEvent>(@event => EarnPoint(ScoreType.Default,@event.ObjectCount));
+            EventBus.Subscribe<OnLevelStartEvent>(@event => ResetCounters());
+            EventBus.Subscribe<OnSquareCreatedEvent>(@event => EarnPoint(ScoreType.Default));
             EventBus.Subscribe<OnBlastEvent>(@event => EarnPoint(@event.ScoreType,@event.BlastCount));
         }
 
@@ -74,7 +82,8 @@ namespace _Game.LevelSystem
         {
             EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => CountPlacements());
             EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => CountMovements());
-            EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => EarnPoint(ScoreType.Default,@event.ObjectCount));
+            EventBus.Unsubscribe<OnLevelStartEvent>(@event => ResetCounters());
+            EventBus.Unsubscribe<OnSquareCreatedEvent>(@event => EarnPoint(ScoreType.Default));
             EventBus.Unsubscribe<OnBlastEvent>(@event => EarnPoint(ScoreType.Blast,@event.BlastCount));
         }
     }

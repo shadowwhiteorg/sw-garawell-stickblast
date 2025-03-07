@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Game.DataStructures;
 using _Game.GridSystem;
 using _Game.Managers;
@@ -13,16 +14,22 @@ namespace _Game.BlockSystem
 
         public void ShowGhostShape(Vector2Int pivotGridPos, Shape shape)
         {
-            HideGhostBlock(); // Clear existing ghost block
+            HideGhostBlock();
 
-            // Instantiate the shape's ghost prefab
-            _currentGhost = Instantiate(
+            foreach (var line in shape.Lines)
+            {
+                Vector2Int linePos = pivotGridPos + line.gridPosition;
+                if (!GridManager.Instance.IsGridPositionEmpty(linePos, line.isHorizontal,true))
+                    return;
+            }
+            if (!_currentGhost)
+                _currentGhost = Instantiate(
                 shape.GhostPrefab,
                 GridManager.Instance.GridToWorldPosition(pivotGridPos),
                 Quaternion.identity
-            );
+                );
+            _currentGhost.transform.position = GridManager.Instance.GridToWorldPosition(pivotGridPos);
         }
-
         public void HideGhostBlock()
         {
             if (_currentGhost)
@@ -30,6 +37,16 @@ namespace _Game.BlockSystem
                 Destroy(_currentGhost);
                 _currentGhost = null;
             }
+        }
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<OnLevelStartEvent>(@event => HideGhostBlock());
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<OnLevelStartEvent>(@event => HideGhostBlock());
         }
     }
 }
