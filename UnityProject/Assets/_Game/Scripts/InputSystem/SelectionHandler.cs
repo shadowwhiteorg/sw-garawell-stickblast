@@ -18,18 +18,14 @@ namespace _Game.InputSystem
         {
             var selectedBlock = GridHandler.Instance.GetClosestTouchable(touchPosition);
             if (!selectedBlock) return null;
-
-            // Get the parent object of the shape
+            UIManager.Instance.PlaySelectSound();
             _selectedShapeParent = selectedBlock.transform.parent.gameObject;
 
-            // Calculate pivot grid position
             Vector2 worldPos = _selectedShapeParent.transform.position;
             _pivotGridPos = GridManager.Instance.WorldToGridPosition(worldPos);
 
-            // Calculate drag gridPosition
             _dragOffset = (Vector2)_selectedShapeParent.transform.position - touchPosition;
 
-            // Lift the shape slightly
             MovementHandler.MoveWithEase(
                 _selectedShapeParent.transform,
                 (Vector3)touchPosition + InputHandler.Instance.InitialTouchableXOffset * Vector3.up,

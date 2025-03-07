@@ -5,6 +5,7 @@ using _Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 namespace _Game.Managers
 {
@@ -19,6 +20,13 @@ namespace _Game.Managers
         [SerializeField] private Button nextLevelButton;
         [SerializeField] private GameObject loseLevelPanel;
         [SerializeField] private Button restartButton;
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip selectSound;
+        [SerializeField] private AudioClip dropSound;
+        [SerializeField] private AudioClip levelWinSound;
+        [SerializeField] private AudioClip levelLoseSound;
+        [FormerlySerializedAs("_matchSound")] [SerializeField] private AudioClip matchSound;
+        [SerializeField] private AudioClip blastSound;
         
         private LevelManager _levelManager;
         private ScoreSystem _scoreSystem;
@@ -57,6 +65,8 @@ namespace _Game.Managers
             inGamePanel?.SetActive(false);
             winLevelPanel?.SetActive(isWin);
             loseLevelPanel?.SetActive(!isWin);
+            if (isWin)
+                audioSource.PlayOneShot(isWin? levelWinSound : levelLoseSound);
         }
 
         private void OpenLevelStart()
@@ -64,6 +74,11 @@ namespace _Game.Managers
             winLevelPanel?.SetActive(false);
             loseLevelPanel?.SetActive(false);
             inGamePanel?.SetActive(true);
+        }
+
+        public void PlaySelectSound()
+        {
+            audioSource.PlayOneShot(selectSound);
         }
 
         private void OnEnable()
@@ -74,6 +89,11 @@ namespace _Game.Managers
             EventBus.Subscribe<OnMovementCountChanged>(@event => UpdateMovementUI());
             EventBus.Subscribe<OnLevelWinEvent>(@event => OpenLevelEnd(true));
             EventBus.Subscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false));
+            EventBus.Subscribe<OnObjectPlacedEvent>(@event => audioSource.PlayOneShot(dropSound));
+            EventBus.Subscribe<OnSquareCreatedEvent>(@event => audioSource.PlayOneShot(matchSound));
+            EventBus.Subscribe<OnBlastEvent>(@event => audioSource.PlayOneShot(blastSound));
+            
+            
         }
         
         private void OnDisable()
@@ -84,6 +104,9 @@ namespace _Game.Managers
             EventBus.Unsubscribe<OnMovementCountChanged>(@event => UpdateMovementUI());
             EventBus.Unsubscribe<OnLevelWinEvent>(@event => OpenLevelEnd(true));
             EventBus.Unsubscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false));
+            EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => audioSource.PlayOneShot(dropSound));
+            EventBus.Subscribe<OnSquareCreatedEvent>(@event => audioSource.PlayOneShot(matchSound));
+            EventBus.Subscribe<OnBlastEvent>(@event => audioSource.PlayOneShot(blastSound));
         }
     }
 }

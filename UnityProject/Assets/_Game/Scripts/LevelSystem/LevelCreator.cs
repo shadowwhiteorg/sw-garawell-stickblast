@@ -16,7 +16,6 @@ namespace _Game.LevelSystem
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
         [SerializeField] private BlockCatalog blockCatalog;
-        [SerializeField] private GameObject levelParent;
         
         private LevelData _currentLevelData;
         private List<SidelineBlock> _sidelineBlocks = new();
@@ -28,6 +27,10 @@ namespace _Game.LevelSystem
         
         public void CreateTouchableBlocks()
         {
+            for (int i = 0; i < outOfTheSceneTarget.transform.childCount; i++)
+            {
+                Destroy(outOfTheSceneTarget.transform.GetChild(i).gameObject);
+            }
             _sidelineBlocks.Clear();
             outOfTheSceneTarget.transform.position = new Vector3( 25, outOfTheSceneTarget.transform.position.y, outOfTheSceneTarget.transform.position.z);
             if (_isLevelEnd) return;
@@ -65,6 +68,7 @@ namespace _Game.LevelSystem
     
         private SidelineBlock CreateTouchableBlock(Shape shape, int index)
         {
+            
             GameObject shapeParent = new GameObject($"Shape_{shape.ShapeType}");
             // shapeParent.transform.SetParent(transform);
             shapeParent.transform.SetParent(outOfTheSceneTarget.transform, false);
