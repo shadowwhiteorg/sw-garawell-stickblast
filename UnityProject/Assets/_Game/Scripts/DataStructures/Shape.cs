@@ -12,6 +12,7 @@ namespace _Game.DataStructures
         public ShapeType ShapeType;
         public List<LineInfo> Lines; // List of Lines in the Shape
         public GameObject GhostPrefab;       // Ghost prefab for this Shape
+        public GameObject VisualPrefab;
     }
     
 }

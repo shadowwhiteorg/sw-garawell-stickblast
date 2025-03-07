@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using _Game.DataStructures;
 using _Game.Utils;
 using UnityEngine;
@@ -8,26 +9,32 @@ namespace _Game.LevelSystem
 {
     public class LevelManager : Singleton<LevelManager>
     {
-        private int _movementCounter;
-        public int CurrentLevel => PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
-    
-        
+        [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
+        private int _currentLevel;
+        public int CurrentLevel =>PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
 
+        public LevelData CurrentLevelData => _levelDataList[CurrentLevel % _levelDataList.Count];
+    
         private void Start()
         {
             EventBus.Fire(new OnLevelStartEvent());
         }
-        
-        private void CountMovements()
+
+        private void IncrementLevel()
         {
-            _movementCounter++;
-            if (_movementCounter >= LevelCreator.Instance.NumberOfTouchableObjects )
-            {
-                _movementCounter = 0;
-                LevelCreator.Instance.CreateTouchableBlocks();
-            }
+            _currentLevel = CurrentLevel;
+            _currentLevel++;
+            PlayerPrefs.SetInt(GameConstants.PlayerPrefsLevel,_currentLevel);
         }
-        
-        
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<OnLevelWinEvent>(e=> IncrementLevel() );
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<OnLevelWinEvent>(e => IncrementLevel());
+        }
     }
 }

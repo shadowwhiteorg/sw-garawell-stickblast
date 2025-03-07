@@ -85,13 +85,23 @@
 * Implement complex blocks ( L and U shaped blocks ) into core mechanic system 
 
 **Progress:**
-*
+* Refactoring - DONE
+* Core mechanics finalized
+* UI assest selected and imported
+* Complex cude mechanic created
 
 ## Day 4:
 ### Polish and Release
 
 **Goals:**
-*
+* Complete UI System
+* Add SFXs and VFXs
+* Create Levels
+* Create complex block prefabs
+
+
 
 **Progress:**
-*
+* UI System completed
+* SFX and VFXs integrated
+* 3 unique level created

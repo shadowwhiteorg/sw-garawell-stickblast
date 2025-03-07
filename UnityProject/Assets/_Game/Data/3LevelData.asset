@@ -13,36 +13,8 @@ MonoBehaviour:
   m_Name: 3LevelData
   m_EditorClassIdentifier: 
   levelNr: 3
-  gridWidth: 5
-  gridHeight: 5
-  initialLines:
-  - gridPosition: {x: 2, y: 0}
-    isHorizontal: 0
-  - gridPosition: {x: 2, y: 1}
-    isHorizontal: 0
-  - gridPosition: {x: 2, y: 2}
-    isHorizontal: 0
-  - gridPosition: {x: 2, y: 3}
-    isHorizontal: 0
-  - gridPosition: {x: 2, y: 4}
-    isHorizontal: 0
-  - gridPosition: {x: 0, y: 2}
-    isHorizontal: 1
-  - gridPosition: {x: 1, y: 2}
-    isHorizontal: 1
-  - gridPosition: {x: 2, y: 2}
-    isHorizontal: 1
-  - gridPosition: {x: 3, y: 2}
-    isHorizontal: 1
-  - gridPosition: {x: 4, y: 2}
-    isHorizontal: 1
-  - gridPosition: {x: 3, y: 0}
-    isHorizontal: 0
-  - gridPosition: {x: 3, y: 1}
-    isHorizontal: 0
-  - gridPosition: {x: 3, y: 2}
-    isHorizontal: 0
-  - gridPosition: {x: 3, y: 3}
-    isHorizontal: 0
-  - gridPosition: {x: 3, y: 4}
-    isHorizontal: 0
+  GridWidth: 5
+  GridHeight: 5
+  InitialLines: []
+  TargetScore: 30
+  MovementLimit: 100

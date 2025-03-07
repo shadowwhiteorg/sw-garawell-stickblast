@@ -15,7 +15,7 @@ namespace _Game.Utils
                 {
                     var posX = i * cellSize;
                     var posY = j * cellSize;
-                    var gridObject = Object.Instantiate(gridObjectPrefab, new Vector3(posX, posY, 0), Quaternion.identity);
+                    var gridObject = Object.Instantiate(gridObjectPrefab, new Vector3(posX, posY, 0), Quaternion.identity,parentObject?.transform);
                     gridObject.SetPosition(i, j, posX, posY);
                     mBlockList.Add(gridObject);
                 }
@@ -23,7 +23,7 @@ namespace _Game.Utils
             return mBlockList;
         }
 
-        public static void PositionTheGridAtCenter(List<T> objectList, int sizeX, int sizeY, float gridSize, string parentName)
+        public static void PositionTheGridAtCenter(List<T> objectList, int sizeX, int sizeY, float gridSize, string parentName, Transform parentObject)
         {
             GameObject gridParent = new GameObject(parentName);
             foreach (var obj in objectList)
@@ -32,6 +32,7 @@ namespace _Game.Utils
             }
             float centerY = -(sizeY * gridSize) / 2f;
             float centerX = -(sizeX * gridSize) / 2f;
+            gridParent.transform.SetParent(parentObject);
             gridParent.transform.position = new Vector3(centerX, centerY, 0);
         }
     }

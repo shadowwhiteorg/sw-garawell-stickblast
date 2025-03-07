@@ -62,14 +62,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3526989914362997414, guid: 278a52bc14518eb40967bcc3e05fdb41, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5238171022319949513}
+      addedObject: {fileID: 3866954943366167353}
   m_SourcePrefab: {fileID: 100100000, guid: 278a52bc14518eb40967bcc3e05fdb41, type: 3}
 --- !u!1 &665368449102646985 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3526989914362997414, guid: 278a52bc14518eb40967bcc3e05fdb41, type: 3}
   m_PrefabInstance: {fileID: 4164070126107878511}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5238171022319949513
+--- !u!114 &3866954943366167353
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,6 +78,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 665368449102646985}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad410ff96e6d43638a88666346fb8c42, type: 3}
+  m_Script: {fileID: 11500000, guid: 1396394bc81249019e8b5915ae75692a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  touchSize: {x: 0, y: 0}
+  isHorizontal: 0
+  model: {fileID: 0}
+  Shape:
+    ShapeType: 0
+    Lines: []
+    GhostPrefab: {fileID: 0}
+    VisualPrefab: {fileID: 0}

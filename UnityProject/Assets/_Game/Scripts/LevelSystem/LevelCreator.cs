@@ -16,25 +16,24 @@ namespace _Game.LevelSystem
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
         [SerializeField] private BlockCatalog blockCatalog;
-        [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
         
-        private List<SidelineBlock> _sidelineBlocks = new();
         private LevelData _currentLevelData;
+        private List<SidelineBlock> _sidelineBlocks = new();
+        private bool _isLevelEnd;
         
-    public LevelData CurrentLevelData => _currentLevelData;
         public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
         public int NumberOfTouchableObjects => numberOfTouchableObjects;
-    
-        private void Start()
-        {
-            InitializeLevel();
-        }
+        
         
         public void CreateTouchableBlocks()
         {
+            for (int i = 0; i < outOfTheSceneTarget.transform.childCount; i++)
+            {
+                Destroy(outOfTheSceneTarget.transform.GetChild(i).gameObject);
+            }
             _sidelineBlocks.Clear();
             outOfTheSceneTarget.transform.position = new Vector3( 25, outOfTheSceneTarget.transform.position.y, outOfTheSceneTarget.transform.position.z);
-    
+            if (_isLevelEnd) return;
             for (int i = 0; i < numberOfTouchableObjects; i++)
             {
                 SidelineBlock sidelineBlock = null;
@@ -58,6 +57,7 @@ namespace _Game.LevelSystem
                 else
                 {
                     // TODO: Fire Game Over Event Here!!!
+                    EventBus.Fire(new OnLevelLoseEvent());
                     Debug.LogWarning("No valid shape found! Possible game over condition.");
                 }
             }
@@ -68,12 +68,14 @@ namespace _Game.LevelSystem
     
         private SidelineBlock CreateTouchableBlock(Shape shape, int index)
         {
+            
             GameObject shapeParent = new GameObject($"Shape_{shape.ShapeType}");
+            // shapeParent.transform.SetParent(transform);
             shapeParent.transform.SetParent(outOfTheSceneTarget.transform, false);
 
-            Vector3 parentPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize*3);
+            Vector3 parentPosition = Vector3.right * ((index - 1) * GridManager.Instance.BlockSize*2);
             shapeParent.transform.localPosition = parentPosition;
-
+            Instantiate(shape.VisualPrefab,shapeParent.transform.position, Quaternion.identity,shapeParent.transform); 
             SidelineBlock mainBlock = null;
             foreach (var line in shape.Lines)
             {
@@ -85,6 +87,7 @@ namespace _Game.LevelSystem
                 lineBlock.transform.localPosition = (Vector3)(Vector2)line.gridPosition * GridManager.Instance.BlockSize;
 
                 lineBlock.Shape = shape;
+                lineBlock.ShowModel(false);
                 
                 if (!mainBlock)
                 {
@@ -102,7 +105,7 @@ namespace _Game.LevelSystem
         public void MoveTouchablesIntoScene()
         {
             MovementHandler.MoveWithEase(outOfTheSceneTarget,
-                new Vector3(0, outOfTheSceneTarget.Position.y, 0), 35, Easing.OutBack);
+                new Vector3(-1.5f, outOfTheSceneTarget.Position.y, 0), 35, Easing.OutBack);
         }
     
         public void SpawnRandomShape(Vector2 worldPosition)
@@ -115,8 +118,8 @@ namespace _Game.LevelSystem
         }
         private void InitializeLevel()
         {
-            _currentLevelData = _levelDataList[LevelManager.Instance.CurrentLevel];
-
+            _isLevelEnd = false;
+            _currentLevelData = LevelManager.Instance.CurrentLevelData;
             foreach (var line in _currentLevelData.InitialLines)
             {
                 Vector2 worldPos = GridManager.Instance.GridToWorldPosition(line.gridPosition);
@@ -134,9 +137,26 @@ namespace _Game.LevelSystem
             EventBus.Fire(new OnLevelInitializeEvent());
         }
 
+        private void ResetLevel()
+        {
+            _isLevelEnd = true;
+            for (int i = 0; i < outOfTheSceneTarget.transform.childCount; i++)
+            {
+                Destroy(outOfTheSceneTarget.transform.GetChild(i).gameObject);
+            }
+        }
+        
+
         private void OnEnable()
         {
             EventBus.Subscribe<OnLevelStartEvent>(e=>InitializeLevel());
+            EventBus.Subscribe<OnLevelWinEvent>(@event => ResetLevel());
+            EventBus.Subscribe<OnLevelLoseEvent>(@event => ResetLevel());
+        }private void OnDisable()
+        {
+            EventBus.Unsubscribe<OnLevelStartEvent>(e=>InitializeLevel());
+            EventBus.Unsubscribe<OnLevelWinEvent>(@event => ResetLevel());
+            EventBus.Unsubscribe<OnLevelLoseEvent>(@event => ResetLevel());
         }
     }
 }

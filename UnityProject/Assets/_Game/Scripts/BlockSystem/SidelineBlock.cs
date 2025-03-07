@@ -10,7 +10,8 @@ namespace _Game.BlockSystem
         
         [SerializeField] private Vector2 touchSize = Vector2.zero;
         [SerializeField] private bool isHorizontal = false;
-        // [SerializeField] private Shape shape;
+        [SerializeField] private GameObject model;
+        
         public Shape Shape;
         public bool IsHorizontal => isHorizontal;
         
@@ -37,6 +38,11 @@ namespace _Game.BlockSystem
         public void LockUnlockMove(bool canMove)
         {
             _canMove = canMove;
+        }
+
+        public void ShowModel(bool show)
+        {
+            model.SetActive(show);
         }
     }
     

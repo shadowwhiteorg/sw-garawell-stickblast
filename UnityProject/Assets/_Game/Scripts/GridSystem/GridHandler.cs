@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using _Game.BlockSystem;
+using _Game.Managers;
 using _Game.Utils;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace _Game.GridSystem
         public SidelineBlock GetClosestTouchable(Vector2 touchPosition)
         {
             SidelineBlock closestTouchable = null;
-            float closestDistance = float.MaxValue;
+            float closestDistance = InputHandler.Instance.SelectRange;
 
             foreach (var touchable in _interactableTouchables)
             {
