@@ -14,7 +14,7 @@ namespace _Game.Managers
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private TextMeshProUGUI movementText;
         [SerializeField] private TextMeshProUGUI scoreText;
-        [SerializeField] private Image scoreSlider;
+        [SerializeField] private Slider scoreSlider;
         
         private LevelManager _levelManager;
         private ScoreSystem _scoreSystem;
@@ -23,35 +23,35 @@ namespace _Game.Managers
         {
             _levelManager = LevelManager.Instance;
             _scoreSystem = ScoreSystem.Instance;
-            levelText.text = LevelManager.Instance.CurrentLevel.ToString();
-            scoreText.text =  _scoreSystem.CurrentScore + " / " + ScoreSystem.Instance.TargetScore;
-            scoreSlider.fillAmount = (float)_scoreSystem.CurrentScore / _scoreSystem.TargetScore;
-            movementText.text = _scoreSystem.CurrentMovement + " / " + ScoreSystem.Instance.MovementLimit;
+            levelText.text = _levelManager.CurrentLevel.ToString();
+            scoreText.text =  0 + " / " + _scoreSystem.TargetScore;
+            scoreSlider.value = (float)0 / _scoreSystem.TargetScore;
+            movementText.text = _scoreSystem.CurrentMovement + " / " + _scoreSystem.MovementLimit;
         }
 
         private void UpdatePointUI()
         {
-            scoreText.text =  _scoreSystem.CurrentScore + " / " + ScoreSystem.Instance.TargetScore;
-            scoreSlider.fillAmount = (float)_scoreSystem.CurrentScore / _scoreSystem.TargetScore;
+            scoreText.text =  _scoreSystem.CurrentScore + " / " + _scoreSystem.TargetScore;
+            scoreSlider.value = (float)_scoreSystem.CurrentScore / _scoreSystem.TargetScore;
         }
 
         private void UpdateMovementUI()
         {
-            movementText.text = _scoreSystem.CurrentMovement + " / " + ScoreSystem.Instance.MovementLimit;
+            movementText.text = _scoreSystem.CurrentMovement + " / " + _scoreSystem.MovementLimit;
         }
 
         private void OnEnable()
         {
+            EventBus.Subscribe<OnLevelInitializeEvent>(@event => Initialize());
             EventBus.Subscribe<OnScoreChanged>(@event => UpdatePointUI());
             EventBus.Subscribe<OnMovementCountChanged>(@event => UpdateMovementUI());
-            EventBus.Subscribe<OnLevelInitializeEvent>(@event => Initialize());
         }
 
         private void OnDisable()
         {
+            EventBus.Unsubscribe<OnLevelInitializeEvent>(@event => Initialize());
             EventBus.Unsubscribe<OnScoreChanged>(@event => UpdatePointUI());
             EventBus.Unsubscribe<OnMovementCountChanged>(@event => UpdateMovementUI());
-            EventBus.Unsubscribe<OnLevelInitializeEvent>(@event => Initialize());
         }
     }
 }

@@ -9,28 +9,23 @@ namespace _Game.LevelSystem
 {
     public class LevelManager : Singleton<LevelManager>
     {
-        private int _movementCounter;
         [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
-        public int CurrentLevel => PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
-        public LevelData CurrentLevelData => _levelDataList[CurrentLevel];
-    
-        
+        private int _currentLevel;
+        public int CurrentLevel =>PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
 
+        public LevelData CurrentLevelData => _levelDataList[0];
+    
         private void Start()
         {
             EventBus.Fire(new OnLevelStartEvent());
         }
-        
-        private void CountMovements()
+
+        private void IncrementLevel()
         {
-            _movementCounter++;
-            if (_movementCounter >= LevelCreator.Instance.NumberOfTouchableObjects )
-            {
-                _movementCounter = 0;
-                LevelCreator.Instance.CreateTouchableBlocks();
-            }
+            _currentLevel = CurrentLevel;
+            _currentLevel++;
+            PlayerPrefs.SetInt(GameConstants.PlayerPrefsLevel,_currentLevel);
         }
-        
         
     }
 }
