@@ -21,8 +21,8 @@ namespace _Game.Managers
 
         private SelectionHandler _selectionHandler;
         private Camera _camera;
-
-        private void Awake()
+        
+        private void Start()
         {
             _camera = Camera.main;
             _selectionHandler = new SelectionHandler();
