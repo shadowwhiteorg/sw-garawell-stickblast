@@ -26,7 +26,7 @@ namespace _Game.InputSystem
             Vector2 worldPos = _selectedShapeParent.transform.position;
             _pivotGridPos = GridManager.Instance.WorldToGridPosition(worldPos);
 
-            // Calculate drag offset
+            // Calculate drag gridPosition
             _dragOffset = (Vector2)_selectedShapeParent.transform.position - touchPosition;
 
             // Lift the shape slightly
@@ -44,7 +44,7 @@ namespace _Game.InputSystem
         {
             if (!_selectedShapeParent) return;
 
-            // Move the shape to the touch position with the offset
+            // Move the shape to the touch position with the gridPosition
             _selectedShapeParent.transform.position = touchPosition + _dragOffset;
 
             // Update ghost positions
@@ -61,7 +61,7 @@ namespace _Game.InputSystem
             );
 
             var shape = _selectedShapeParent.GetComponentInChildren<SidelineBlock>().Shape;
-            if (PlacementHandler.Instance.TryPlaceShape(targetGridPos, shape))
+            if (PlacementHandler.Instance.TryPlaceShape(targetGridPos, shape, false))
             {
                 // Successfully placed - destroy the original shape
                 MonoBehaviour.Destroy(_selectedShapeParent);

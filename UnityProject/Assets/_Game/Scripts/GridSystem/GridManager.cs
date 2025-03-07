@@ -2,14 +2,12 @@
 using _Game.BlockSystem;
 using _Game.CoreMechanic;
 using _Game.DataStructures;
-using _Game.GridSystem;
 using _Game.InputSystem;
+using _Game.LevelSystem;
 using _Game.Utils;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace _Game.Managers
+namespace _Game.GridSystem
 {
     public class GridManager : Singleton<GridManager>
     {
@@ -32,22 +30,7 @@ namespace _Game.Managers
         public Dictionary<Vector2Int, SquareBlock> SquareGrid => _squareGrid;
         public Dictionary<Vector2, Vector2Int> PositionGrid => _positionGrid;
         public SelectionHandler SelectionHandler => _selectionHandler;
-        public bool TryGetSidelineBlock(Vector2Int gridPos, bool isHorizontal, out SidelineBlock block)
-        {
-            block = null;
-            if (_sidelineGrid.TryGetValue(gridPos, out var blocks))
-            {
-                foreach (var b in blocks)
-                {
-                    if (b.IsHorizontal == isHorizontal)
-                    {
-                        block = b;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
         
         private void InitializeGrid()
        {
@@ -66,43 +49,29 @@ namespace _Game.Managers
 
 
        }
-
-
-       private void InitializeSquareGrid(int gridSizeX, int gridSizeY, float cellSize)
+       
+       public bool CanPlaceShapeAnywhere(Shape shape, out Vector2Int validPosition)
        {
-           var squares = GridPlacer<SquareBlock>.Place(gridSizeX, gridSizeY, cellSize, blockCatalog.squareBlockPrefab,
-               gameObject);
-           GridPlacer<SquareBlock>.PositionTheGridAtCenter(squares, gridSizeX, gridSizeY, cellSize, "SquareParent");
+           for (int x = 0; x < numberOfColumns; x++)
+           {
+               for (int y = 0; y < numberOfRows; y++)
+               {
+                   Vector2Int gridPos = new Vector2Int(x, y);
+
+                   if (PlacementHandler.Instance.TryPlaceShape(gridPos, shape))
+                   {
+                       validPosition = gridPos;
+                       return true;
+                   }
+               }
+           }
+
+           validPosition = Vector2Int.zero;
+           return false;
        }
 
 
-       private void InitializeSideGrid(int gridSizeX, int gridSizeY, float cellSize)
-       {
-           var horizontalLines = GridPlacer<SidelineBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
-               blockCatalog.horizontalSidelinePrefab);
-           var verticalLines = GridPlacer<SidelineBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
-               blockCatalog.verticalSidelinePrefab);
-
-
-           GridPlacer<SidelineBlock>.PositionTheGridAtCenter(horizontalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
-           GridPlacer<SidelineBlock>.PositionTheGridAtCenter(verticalLines, gridSizeX, gridSizeY, cellSize, "SidelineParent");
-       }
-
-
-       private void InitializeGhostGrid(int gridSizeX, int gridSizeY, float cellSize)
-       {
-           var ghostDots = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY + 1, cellSize,
-               blockCatalog.ghostDotBlockPrefab);
-           var ghostHorizon = GridPlacer<GhostBlock>.Place(gridSizeX + 1, gridSizeY, cellSize,
-               blockCatalog.ghostHorizontalSidelineBlockPrefab);
-           var ghostVertical = GridPlacer<GhostBlock>.Place(gridSizeX, gridSizeY + 1, cellSize,
-               blockCatalog.ghostVerticalSidelineBlockPrefab);
-
-
-           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostDots, gridSizeX, gridSizeY, cellSize, "GhostParent");
-           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostHorizon, gridSizeX, gridSizeY, cellSize, "GhostParent");
-           GridPlacer<GhostBlock>.PositionTheGridAtCenter(ghostVertical, gridSizeX, gridSizeY, cellSize, "GhostParent");
-       }
+       
        
        public bool IsGridPositionValid(Vector2Int gridPos)
        {
@@ -134,10 +103,9 @@ namespace _Game.Managers
 
        public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
        {
-           if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
-           if (!IsGridPositionEmpty(gridPos, lineBlock.IsHorizontal)) return false; // Position is not empty for this orientation
+           if (!IsGridPositionValid(gridPos)) return false; 
+           if (!IsGridPositionEmpty(gridPos, lineBlock.IsHorizontal)) return false;
 
-           // Add the block to the list at the grid position
            if (!_sidelineGrid.TryGetValue(gridPos, out var blocks))
            {
                blocks = new List<SidelineBlock>();
@@ -242,7 +210,7 @@ namespace _Game.Managers
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
             }
-
+            EventBus.Fire(new OnBlastEvent{BlastCount = _blastedSquares.Count});
             _blastedSquares.Clear();
         }
 
@@ -309,7 +277,28 @@ namespace _Game.Managers
         
         private void OnEnable()
         {
-            EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGrid() );
+            EventBus.Subscribe<OnLevelInitializeEvent>(e=> InitializeGrid() );
+        }
+        
+        public void ClearGrid()
+        {
+            _sidelineGrid.Clear();
+            _squareGrid.Clear();
+
+            // Destroy all line and square objects
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        public void InitializeGrid(LevelData levelData)
+        {
+            ClearGrid();
+            // Initialize grid size based on levelData
+            numberOfColumns = levelData.GridWidth;
+            numberOfRows = levelData.GridHeight;
+            InitializeGrid();
         }
     }
 }

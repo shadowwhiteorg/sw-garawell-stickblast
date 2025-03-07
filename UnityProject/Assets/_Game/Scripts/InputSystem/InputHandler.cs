@@ -1,6 +1,7 @@
 ﻿using _Game.BlockSystem;
 using _Game.CoreMechanic;
 using _Game.InputSystem;
+using _Game.LevelSystem;
 using _Game.Utils;
 using UnityEngine;
 
@@ -44,11 +45,11 @@ namespace _Game.Managers
             
             if (Input.GetKeyDown(KeyCode.K))
             {
-                LevelManager.Instance.CreateTouchableBlocks();
+                LevelCreator.Instance.CreateTouchableBlocks();
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                LevelManager.Instance.MoveTouchablesIntoScene();
+                LevelCreator.Instance.MoveTouchablesIntoScene();
             }
             
         }
