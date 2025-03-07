@@ -21,8 +21,8 @@ namespace _Game.Managers
 
         private SelectionHandler _selectionHandler;
         private Camera _camera;
-
-        private void Awake()
+        
+        private void Start()
         {
             _camera = Camera.main;
             _selectionHandler = new SelectionHandler();
@@ -51,16 +51,6 @@ namespace _Game.Managers
                 _selectionHandler.ReleaseSelectedObject();
             }
             
-            
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                LevelCreator.Instance.CreateTouchableBlocks();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                LevelCreator.Instance.MoveTouchablesIntoScene();
-            }
-            
         }
 
         private void ActivateRocket()
@@ -82,12 +72,6 @@ namespace _Game.Managers
             EventBus.Subscribe<OnRocketSelected>(@event => ActivateRocket());
             EventBus.Subscribe<OnBlastEvent>(@event => ActivateRocket());
 
-        }
-
-        private void OnDisable()
-        {
-            // EventBus.Unsubscribe<OnRocketSelected>(@event => ActivateRocket());
-            // EventBus.Unsubscribe<OnBlastEvent>(@event => ActivateRocket());
         }
     }
 }

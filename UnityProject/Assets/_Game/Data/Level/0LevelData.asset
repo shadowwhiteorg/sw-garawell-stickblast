@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94f3ca0fd1e041f6973d694564b5fa65, type: 3}
-  m_Name: 3LevelData
+  m_Name: 0LevelData
   m_EditorClassIdentifier: 
-  levelNr: 3
+  levelNr: 0
   GridWidth: 5
   GridHeight: 5
   InitialLines: []
-  TargetScore: 30
-  MovementLimit: 100
+  TargetScore: 500
+  MovementLimit: 20
