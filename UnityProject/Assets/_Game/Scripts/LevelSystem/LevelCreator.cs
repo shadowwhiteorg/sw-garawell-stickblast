@@ -115,7 +115,7 @@ namespace _Game.LevelSystem
         }
         private void InitializeLevel()
         {
-            _currentLevelData = _levelDataList[LevelManager.Instance.CurrentLevel];
+            _currentLevelData = _levelDataList[LevelManager.Instance.CurrentLevel-1];
 
             foreach (var line in _currentLevelData.InitialLines)
             {
