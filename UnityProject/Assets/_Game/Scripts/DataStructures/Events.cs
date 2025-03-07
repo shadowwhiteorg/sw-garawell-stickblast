@@ -11,7 +11,10 @@ namespace _Game.DataStructures
     public struct OnLevelLoseEvent {}
     public struct OnLevelWinEvent {}
     public struct OnLevelEndEvent { }
-
+    
+    public struct OnScoreChanged {}
+    public struct OnMovementCountChanged {}
+    
     public struct OnObjectPlacedEvent
     {
         public int ObjectCount;

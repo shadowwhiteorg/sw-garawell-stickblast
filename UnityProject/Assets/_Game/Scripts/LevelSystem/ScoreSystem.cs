@@ -1,11 +1,12 @@
-﻿using _Game.DataStructures;
+﻿using System.Data.SqlTypes;
+using _Game.DataStructures;
 using _Game.Enums;
 using _Game.Utils;
 using UnityEngine;
 
 namespace _Game.LevelSystem
 {
-    public class ScoreSystem : MonoBehaviour
+    public class ScoreSystem : Singleton<ScoreSystem>
     {
         [SerializeField] private int unitDefaultPoint;
         [SerializeField] private int unitBlastPoint;
@@ -17,8 +18,11 @@ namespace _Game.LevelSystem
         private int _placementCounter;
         private int _movementCounter;
 
-        private int TargetScore() => LevelCreator.Instance.CurrentLevelData.TargetScore;
-        private int MovementLimit() => LevelCreator.Instance.CurrentLevelData.MovementLimit;
+        public int CurrentScore => _currentScore;
+        public int CurrentMovement => _movementCounter;
+
+        public int TargetScore => LevelManager.Instance.CurrentLevelData.TargetScore;
+        public int MovementLimit => LevelManager.Instance.CurrentLevelData.MovementLimit;
         
         
         public void EarnPoint(ScoreType type = default, int count =1 )
@@ -32,8 +36,9 @@ namespace _Game.LevelSystem
                     _currentScore += unitBlastPoint*count;
                     break;
             }
+            EventBus.Fire(new OnScoreChanged());
 
-            if (_currentScore >= TargetScore())
+            if (_currentScore >= TargetScore)
             {
                 EventBus.Fire(new OnLevelWinEvent());
             }
@@ -42,7 +47,8 @@ namespace _Game.LevelSystem
         public void CountMovements()
         {
             _movementCounter++;
-            if(_movementCounter >= MovementLimit())
+            EventBus.Fire(new OnMovementCountChanged());
+            if(_movementCounter >= MovementLimit)
                 EventBus.Fire(new OnLevelLoseEvent());
         }
         

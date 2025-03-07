@@ -18,10 +18,9 @@ namespace _Game.LevelSystem
         [SerializeField] private BlockCatalog blockCatalog;
         [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
         
-        private List<SidelineBlock> _sidelineBlocks = new();
         private LevelData _currentLevelData;
+        private List<SidelineBlock> _sidelineBlocks = new();
         
-    public LevelData CurrentLevelData => _currentLevelData;
         public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
         public int NumberOfTouchableObjects => numberOfTouchableObjects;
     
@@ -115,6 +114,7 @@ namespace _Game.LevelSystem
         }
         private void InitializeLevel()
         {
+            _currentLevelData = LevelManager.Instance.CurrentLevelData;
             _currentLevelData = _levelDataList[LevelManager.Instance.CurrentLevel-1];
 
             foreach (var line in _currentLevelData.InitialLines)
