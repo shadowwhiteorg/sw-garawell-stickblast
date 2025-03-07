@@ -41,8 +41,8 @@ namespace _Game.LevelSystem
                 return;
 
             // Grid Size
-            _levelData.gridWidth = EditorGUILayout.IntField("Grid Width", _levelData.gridWidth);
-            _levelData.gridHeight = EditorGUILayout.IntField("Grid Height", _levelData.gridHeight);
+            _levelData.GridWidth = EditorGUILayout.IntField("Grid Width", _levelData.GridWidth);
+            _levelData.GridHeight = EditorGUILayout.IntField("Grid Height", _levelData.GridHeight);
             _levelData.levelNr = _levelNr;
 
             // Line Orientation Toggle
@@ -102,7 +102,7 @@ namespace _Game.LevelSystem
         {
             if (_levelData != null)
             {
-                _levelData.initialLines.Clear();
+                _levelData.InitialLines.Clear();
                 Debug.Log("Grid Reset.");
             }
         }
@@ -113,9 +113,9 @@ namespace _Game.LevelSystem
             float cellMargin = 5f;
             Vector2 offset = new Vector2(250, 250);
 
-            for (int x = 0; x < _levelData.gridWidth; x++)
+            for (int x = 0; x < _levelData.GridWidth; x++)
             {
-                for (int y = 0; y < _levelData.gridHeight; y++)
+                for (int y = 0; y < _levelData.GridHeight; y++)
                 {
                     Rect cellRect = new Rect(
                         offset.x + x * (cellSize + cellMargin),
@@ -124,8 +124,8 @@ namespace _Game.LevelSystem
                         cellSize
                     );
 
-                    bool hasHorizontal = _levelData.initialLines.Any(line => line.gridPosition == new Vector2Int(x, y) && line.isHorizontal);
-                    bool hasVertical = _levelData.initialLines.Any(line => line.gridPosition == new Vector2Int(x, y) && !line.isHorizontal);
+                    bool hasHorizontal = _levelData.InitialLines.Any(line => line.gridPosition == new Vector2Int(x, y) && line.isHorizontal);
+                    bool hasVertical = _levelData.InitialLines.Any(line => line.gridPosition == new Vector2Int(x, y) && !line.isHorizontal);
 
                     Color cellColor = Color.white;
                     if (hasHorizontal && hasVertical) cellColor = Color.magenta; // Both
@@ -146,15 +146,15 @@ namespace _Game.LevelSystem
         private void ToggleLine(int x, int y)
         {
             Vector2Int gridPos = new Vector2Int(x, y);
-            var existingLine = _levelData.initialLines.FirstOrDefault(line => line.gridPosition == gridPos && line.isHorizontal == _isHorizontal);
+            var existingLine = _levelData.InitialLines.FirstOrDefault(line => line.gridPosition == gridPos && line.isHorizontal == _isHorizontal);
 
             if (existingLine != null)
             {
-                _levelData.initialLines.Remove(existingLine);
+                _levelData.InitialLines.Remove(existingLine);
             }
             else
             {
-                _levelData.initialLines.Add(new LineInfo
+                _levelData.InitialLines.Add(new LineInfo
                 {
                     gridPosition = gridPos,
                     isHorizontal = _isHorizontal

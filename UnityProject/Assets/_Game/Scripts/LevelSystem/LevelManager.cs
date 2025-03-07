@@ -9,12 +9,15 @@ namespace _Game.LevelSystem
     public class LevelManager : Singleton<LevelManager>
     {
         private int _movementCounter;
+        public int CurrentLevel => PlayerPrefs.GetInt(GameConstants.PlayerPrefsLevel, 1);
+    
+        
 
-        private void OnEnable()
+        private void Start()
         {
-            EventBus.Subscribe<ObjectPlacedEvent>(@event => CountMovements());
+            EventBus.Fire(new OnLevelStartEvent());
         }
-
+        
         private void CountMovements()
         {
             _movementCounter++;
@@ -24,5 +27,7 @@ namespace _Game.LevelSystem
                 LevelCreator.Instance.CreateTouchableBlocks();
             }
         }
+        
+        
     }
 }

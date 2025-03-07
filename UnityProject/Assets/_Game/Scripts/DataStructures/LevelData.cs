@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Game.DataStructures
 {
@@ -7,9 +8,11 @@ namespace _Game.DataStructures
     public class LevelData : ScriptableObject
     {
         public int levelNr;
-        public int gridWidth = 5;
-        public int gridHeight = 5;
-        public List<LineInfo> initialLines = new List<LineInfo>();
+        public int GridWidth = 5;
+        public int GridHeight = 5;
+        public List<LineInfo> InitialLines = new List<LineInfo>();
+        public int TargetScore = 500;
+        public int MovementLimit = 10;
     }
     
 }

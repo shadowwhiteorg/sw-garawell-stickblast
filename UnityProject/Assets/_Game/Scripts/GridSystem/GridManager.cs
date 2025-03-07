@@ -103,10 +103,9 @@ namespace _Game.GridSystem
 
        public bool TryPlaceLine(Vector2Int gridPos, SidelineBlock lineBlock)
        {
-           if (!IsGridPositionValid(gridPos)) return false; // Position is outside the grid
-           if (!IsGridPositionEmpty(gridPos, lineBlock.IsHorizontal)) return false; // Position is not empty for this orientation
+           if (!IsGridPositionValid(gridPos)) return false; 
+           if (!IsGridPositionEmpty(gridPos, lineBlock.IsHorizontal)) return false;
 
-           // Add the block to the list at the grid position
            if (!_sidelineGrid.TryGetValue(gridPos, out var blocks))
            {
                blocks = new List<SidelineBlock>();
@@ -211,7 +210,7 @@ namespace _Game.GridSystem
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
                 RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
             }
-
+            EventBus.Fire(new OnBlastEvent{BlastCount = _blastedSquares.Count});
             _blastedSquares.Clear();
         }
 
@@ -278,7 +277,7 @@ namespace _Game.GridSystem
         
         private void OnEnable()
         {
-            EventBus.Subscribe<LevelInitializeEvent>(e=> InitializeGrid() );
+            EventBus.Subscribe<OnLevelInitializeEvent>(e=> InitializeGrid() );
         }
         
         public void ClearGrid()
@@ -297,8 +296,8 @@ namespace _Game.GridSystem
         {
             ClearGrid();
             // Initialize grid size based on levelData
-            numberOfColumns = levelData.gridWidth;
-            numberOfRows = levelData.gridHeight;
+            numberOfColumns = levelData.GridWidth;
+            numberOfRows = levelData.GridHeight;
             InitializeGrid();
         }
     }

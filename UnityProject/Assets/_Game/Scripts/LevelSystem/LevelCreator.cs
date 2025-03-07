@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Game.BlockSystem;
 using _Game.CoreMechanic;
 using _Game.DataStructures;
@@ -15,10 +16,12 @@ namespace _Game.LevelSystem
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
         [SerializeField] private BlockCatalog blockCatalog;
-        [SerializeField] private LevelData _levelData;
+        [SerializeField] private List<LevelData> _levelDataList = new List<LevelData>();
         
         private List<SidelineBlock> _sidelineBlocks = new();
-    
+        private LevelData _currentLevelData;
+        
+    public LevelData CurrentLevelData => _currentLevelData;
         public MoveParent OutOfTheSceneTarget => outOfTheSceneTarget;
         public int NumberOfTouchableObjects => numberOfTouchableObjects;
     
@@ -112,7 +115,9 @@ namespace _Game.LevelSystem
         }
         private void InitializeLevel()
         {
-            foreach (var line in _levelData.initialLines)
+            _currentLevelData = _levelDataList[LevelManager.Instance.CurrentLevel];
+
+            foreach (var line in _currentLevelData.InitialLines)
             {
                 Vector2 worldPos = GridManager.Instance.GridToWorldPosition(line.gridPosition);
                 SidelineBlock prefab = line.isHorizontal ? 
@@ -126,8 +131,12 @@ namespace _Game.LevelSystem
             
             MatchHandler.Instance.CheckAllSquares();
             CreateTouchableBlocks();
-            EventBus.Fire(new LevelInitializeEvent());
+            EventBus.Fire(new OnLevelInitializeEvent());
         }
-        
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<OnLevelStartEvent>(e=>InitializeLevel());
+        }
     }
 }
