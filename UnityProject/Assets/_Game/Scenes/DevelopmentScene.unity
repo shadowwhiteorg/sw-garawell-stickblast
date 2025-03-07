@@ -248,6 +248,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &123052469 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2111003559706945372, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
+  m_PrefabInstance: {fileID: 6043386307002700770}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &147605142
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,6 +346,8 @@ MonoBehaviour:
   nextLevelButton: {fileID: 480528165}
   loseLevelPanel: {fileID: 6043386307002700772}
   restartButton: {fileID: 6043386307002700771}
+  rocketButton: {fileID: 123052469}
+  activeRocketParent: {fileID: 1728175807}
   audioSource: {fileID: 148862516}
   selectSound: {fileID: 8300000, guid: 83aeac504a4832442aee784e2cfe74d4, type: 3}
   dropSound: {fileID: 8300000, guid: 6a728c4017d2c2c4c99ac95c311d75d3, type: 3}
@@ -1410,6 +1423,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1728175807 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4567624734182716158, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
+  m_PrefabInstance: {fileID: 6043386307002700770}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1761620806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7049833439541472874, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
@@ -1778,6 +1796,14 @@ PrefabInstance:
     - target: {fileID: 2338150001974450934, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 91.22455
+      objectReference: {fileID: 0}
+    - target: {fileID: 4206248525156530056, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567624734182716158, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7040794939869829853, guid: 17e9d8e49a9d92242b1a5553591140c2, type: 3}
       propertyPath: m_AnchoredPosition.x

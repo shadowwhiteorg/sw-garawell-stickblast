@@ -16,6 +16,7 @@ namespace _Game.InputSystem
 
         public SidelineBlock SelectClosestObject(Vector2 touchPosition)
         {
+            
             var selectedBlock = GridHandler.Instance.GetClosestTouchable(touchPosition);
             if (!selectedBlock) return null;
             UIManager.Instance.PlaySelectSound();
@@ -76,6 +77,8 @@ namespace _Game.InputSystem
             _selectedShapeParent = null;
             GhostBlockHandler.Instance.HideGhostBlock();
         }
+        
+        
         
     }
 }

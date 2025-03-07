@@ -21,6 +21,7 @@ namespace _Game.GridSystem
         private List<Vector2Int> _blastedSquares = new();
         private SelectionHandler _selectionHandler;
 
+
         public BlockCatalog BlockCatalog => blockCatalog;
         public float BlockSize => blockSize;
         public int NumberOfRows => numberOfRows;
@@ -151,7 +152,7 @@ namespace _Game.GridSystem
         {
             Vector2Int key = new(x, y);
             if (_squareGrid.ContainsKey(key)) return;
-
+            
             Vector2 worldPos = this.GridToWorldPosition(key);
             SquareBlock square = Instantiate(blockCatalog.squareBlockPrefab, worldPos, Quaternion.identity, transform);
             square.SetPosition(x, y, worldPos.x, worldPos.y);
@@ -194,6 +195,42 @@ namespace _Game.GridSystem
 
             _blastedSquares.Clear();
         }
+        public Vector2Int? GetClickedSquare(Vector2 worldPosition)
+        {
+            Vector2Int gridPos = this.WorldToGridPosition(worldPosition);
+
+            if (_squareGrid.ContainsKey(gridPos))
+            {
+                return gridPos;
+            }
+
+            return null;
+        }
+        
+        public void BlastSquare(Vector2Int squarePos)
+        {
+            if (!_squareGrid.ContainsKey(squarePos)) return;
+
+            _blastedSquares.Clear();
+            _blastedSquares.Add(squarePos);
+
+            int x = squarePos.x, y = squarePos.y;
+
+            // Remove the square
+            if (_squareGrid.Remove(squarePos, out var square))
+            {
+                Destroy(square.gameObject);
+            }
+
+            // Remove Lines if not part of another square
+            RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
+            RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
+            RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
+            RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
+
+            EventBus.Fire(new OnBlastEvent { BlastCount = 1 });
+        }
+
 
         public void BlastColumn(int column)
         {

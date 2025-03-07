@@ -8,7 +8,7 @@ namespace _Game.DataStructures
     public struct OnLevelStartEvent { }
     public struct OnLevelLoseEvent {}
     public struct OnLevelWinEvent {}
-    public struct OnLevelEndEvent { }
+    public struct OnRocketSelected {}
     
     public struct OnScoreChanged {}
     public struct OnMovementCountChanged {}

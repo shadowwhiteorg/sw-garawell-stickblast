@@ -17,6 +17,7 @@ namespace _Game.LevelSystem
         private int _comboCounter;
         private int _placementCounter;
         private int _movementCounter;
+        private bool _isFirstSquare;
 
         public int CurrentScore => _currentScore;
         public int CurrentMovement => _movementCounter;

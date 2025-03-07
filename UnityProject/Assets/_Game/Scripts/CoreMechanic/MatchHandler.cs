@@ -45,6 +45,60 @@ namespace _Game.CoreMechanic
             if (hasBottom && hasTop && hasLeft && hasRight)
                 GridManager.Instance.CreateSquare(x, y);
         }
+        
+        public void BlastConnectedSquares(Vector2Int startPos)
+        {
+            if (!GridManager.Instance.SquareGrid.ContainsKey(startPos)) return;
+            
+            HashSet<Vector2Int> squaresToBlast = new();
+            FindConnectedSquares(startPos, squaresToBlast);
+            
+            foreach (var square in squaresToBlast)
+            {
+                GridManager.Instance.BlastSquare(square);
+            }
+        }
+
+        private void FindConnectedSquares(Vector2Int startPos, HashSet<Vector2Int> visited)
+        {
+            Stack<Vector2Int> stack = new();
+            stack.Push(startPos);
+
+            while (stack.Count > 0)
+            {
+                Vector2Int current = stack.Pop();
+                if (!visited.Add(current)) continue; // Skip if already visited
+                
+                foreach (Vector2Int neighbor in GetSquareNeighbors(current))
+                {
+                    if (GridManager.Instance.SquareGrid.ContainsKey(neighbor) && !visited.Contains(neighbor))
+                    {
+                        stack.Push(neighbor);
+                    }
+                }
+            }
+        }
+
+        private List<Vector2Int> GetSquareNeighbors(Vector2Int squarePos)
+        {
+            List<Vector2Int> neighbors = new();
+
+            Vector2Int[] directions =
+            {
+                new(squarePos.x + 1, squarePos.y), // Right
+                new(squarePos.x - 1, squarePos.y), // Left
+                new(squarePos.x, squarePos.y + 1), // Up
+                new(squarePos.x, squarePos.y - 1)  // Down
+            };
+
+            foreach (Vector2Int dir in directions)
+            {
+                if (GridManager.Instance.SquareGrid.ContainsKey(dir))
+                    neighbors.Add(dir);
+            }
+
+            return neighbors;
+        }
 
         public void CheckForCompletedLines()
         {
