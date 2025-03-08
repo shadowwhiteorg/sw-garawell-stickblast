@@ -1,10 +1,19 @@
 # ninja log v5
 31	3633	7631334922879775	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	e7e04d517217f68e
+12	3932	7631334925860568	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	d9e7a4693df8df40
 64	3718	7631334923747347	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	f34eae1943d667bf
+4230	4374	7631334930265215	D:/src/unity/sw-garawell-stickblast/UnityProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/6ml6r6f5/obj/arm64-v8a/libgame.so	889c8b8f02e6a250
+79	3847	7631334925032671	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	274d6caf78f673c
 1	3720	7631334923727324	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a90f1e1dd7eb7887
 42	3784	7631334924400646	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	f92185d070ef51bf
-79	3847	7631334925032671	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	274d6caf78f673c
-12	3932	7631334925860568	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	d9e7a4693df8df40
 52	4097	7631334927554831	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	9adcc4db814c706f
 22	4230	7631334928856240	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	6c072bfb923d046c
-4230	4374	7631334930265215	D:/src/unity/sw-garawell-stickblast/UnityProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/6ml6r6f5/obj/arm64-v8a/libgame.so	889c8b8f02e6a250
+74	1695	7631699974156844	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	e7e04d517217f68e
+21	1729	7631699974544914	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a90f1e1dd7eb7887
+50	1745	7631699974694964	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	f34eae1943d667bf
+42	1812	7631699975373530	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	f92185d070ef51bf
+84	1840	7631699975647289	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	274d6caf78f673c
+33	1883	7631699976089683	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	d9e7a4693df8df40
+63	2010	7631699977319508	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	9adcc4db814c706f
+8	2142	7631699978630939	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	6c072bfb923d046c
+2142	2288	7631699980060564	D:/src/unity/sw-garawell-stickblast/UnityProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/6ml6r6f5/obj/arm64-v8a/libgame.so	889c8b8f02e6a250

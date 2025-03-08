@@ -22,6 +22,7 @@ namespace _Game.Managers
         [SerializeField] private GameObject loseLevelPanel;
         [SerializeField] private Button restartButton;
         [SerializeField] private Button rocketButton;
+        [SerializeField] private Button jockerButton;
         [SerializeField] private GameObject activeRocketParent;
         [SerializeField] private GameObject outOfMovesText;
         [SerializeField] private GameObject noPlaceText;
@@ -61,6 +62,10 @@ namespace _Game.Managers
             rocketButton.onClick.AddListener(() => 
             {
                 EventBus.Fire(new OnRocketSelected());
+            });
+            jockerButton.onClick.AddListener(() => 
+            {
+                LevelCreator.Instance.CreateJockerBlock();
             });
             _isLevelStarted = true;
         }

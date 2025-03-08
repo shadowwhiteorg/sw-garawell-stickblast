@@ -16,6 +16,7 @@ namespace _Game.LevelSystem
         [SerializeField] private int numberOfTouchableObjects;
         [SerializeField] private MoveParent outOfTheSceneTarget;
         [SerializeField] private BlockCatalog blockCatalog;
+        [SerializeField] private GameObject jockerParent;
         
         private LevelData _currentLevelData;
         private List<SidelineBlock> _sidelineBlocks = new();
@@ -39,9 +40,9 @@ namespace _Game.LevelSystem
                 SidelineBlock sidelineBlock = null;
             
                 // Try to find a valid shape
-                for (int attempt = 0; attempt < blockCatalog.shapes.Count; attempt++)
+                for (int attempt = 0; attempt < blockCatalog.shapes.Count-1; attempt++)
                 {
-                    Shape shape = blockCatalog.shapes[Random.Range(0, blockCatalog.shapes.Count)];
+                    Shape shape = blockCatalog.shapes[Random.Range(0, blockCatalog.shapes.Count-1)];
             
                     if (GridManager.Instance.CanPlaceShapeAnywhere(shape, out Vector2Int validPosition))
                     {
@@ -63,6 +64,72 @@ namespace _Game.LevelSystem
             }
             if(_sidelineBlocks.Count>0)
                 MoveTouchablesIntoScene();
+        }
+
+        // public void CreateJockerBlock()
+        // {
+        //     Shape shape = blockCatalog.shapes[8];
+        //     GameObject shapeParent = new GameObject($"Shape_{shape.ShapeType}");
+        //     jockerParent.transform.SetParent(shapeParent.transform);
+        //     Instantiate(shape.VisualPrefab,jockerParent.transform.position, Quaternion.identity,jockerParent.transform); 
+        //     SidelineBlock mainBlock = null;
+        //     foreach (var line in shape.Lines)
+        //     {
+        //         var prefab = line.isHorizontal ? 
+        //             GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
+        //             GridManager.Instance.BlockCatalog.verticalSidelinePrefab;
+        //
+        //         var lineBlock = Instantiate(prefab, jockerParent.transform, true);
+        //         lineBlock.transform.localPosition = (Vector3)(Vector2)line.gridPosition * GridManager.Instance.BlockSize;
+        //
+        //         lineBlock.Shape = shape;
+        //         lineBlock.ShowModel(false);
+        //         
+        //         if (!mainBlock)
+        //         {
+        //             mainBlock = lineBlock;
+        //             mainBlock.LockUnlockMove(false);
+        //             mainBlock.SetInitialPosition(jockerParent.transform.position);
+        //             mainBlock.SetWorldPosition(mainBlock.transform.position);
+        //             GridHandler.Instance.RegisterTouchable(mainBlock);
+        //         }
+        //     }
+        //     _sidelineBlocks.Add(mainBlock);
+        // }
+
+        public void CreateJockerBlock()
+        {
+            Shape shape = blockCatalog.shapes[8];
+            GameObject shapeParent = new GameObject($"Shape_{shape.ShapeType}");
+            // shapeParent.transform.SetParent(transform);
+            shapeParent.transform.SetParent(outOfTheSceneTarget.transform, false);
+
+            Vector3 parentPosition = Vector3.down*7.5f;
+            shapeParent.transform.localPosition = parentPosition;
+            Instantiate(shape.VisualPrefab,shapeParent.transform.position, Quaternion.identity,shapeParent.transform); 
+            SidelineBlock mainBlock = null;
+            foreach (var line in shape.Lines)
+            {
+                var prefab = line.isHorizontal ? 
+                    GridManager.Instance.BlockCatalog.horizontalSidelinePrefab : 
+                    GridManager.Instance.BlockCatalog.verticalSidelinePrefab;
+
+                var lineBlock = Instantiate(prefab, shapeParent.transform, true);
+                lineBlock.transform.localPosition = (Vector3)(Vector2)line.gridPosition * GridManager.Instance.BlockSize;
+
+                lineBlock.Shape = shape;
+                lineBlock.ShowModel(false);
+                
+                if (!mainBlock)
+                {
+                    mainBlock = lineBlock;
+                    mainBlock.LockUnlockMove(false);
+                    mainBlock.SetInitialPosition(parentPosition);
+                    mainBlock.SetWorldPosition(mainBlock.transform.position);
+                    GridHandler.Instance.RegisterTouchable(mainBlock);
+                }
+            }
+            _sidelineBlocks.Add(mainBlock);
         }
 
     

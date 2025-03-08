@@ -22,7 +22,7 @@ namespace _Game.GridSystem
             foreach (var touchable in _interactableTouchables)
             {
                 if (touchable == null) continue; // Skip null touchables
-
+                
                 float distance = Vector2.Distance(touchPosition, touchable.transform.position);
                 if (distance < closestDistance)
                 {

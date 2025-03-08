@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Game.DataStructures;
+using _Game.Enums;
 using _Game.GridSystem;
 using _Game.Managers;
 using _Game.Utils;
@@ -19,7 +20,9 @@ namespace _Game.BlockSystem
             foreach (var line in shape.Lines)
             {
                 Vector2Int linePos = pivotGridPos + line.gridPosition;
-                if (!GridManager.Instance.IsGridPositionEmpty(linePos, line.isHorizontal,true))
+                if (!GridManager.Instance.IsGridPositionEmpty(linePos, line.isHorizontal,true)&& shape.ShapeType!=ShapeType.Jocker)
+                    return;
+                if(shape.ShapeType == ShapeType.Jocker && !GridManager.Instance.IsGridPositionValid(linePos, line.isHorizontal,false))
                     return;
             }
             if (!_currentGhost)

@@ -81,6 +81,18 @@ MonoBehaviour:
       isHorizontal: 0
     GhostPrefab: {fileID: 8713619208637811817, guid: abea24ed6202b434193ceba44cb0b525, type: 3}
     VisualPrefab: {fileID: 5933328689624126563, guid: fe90987b1a06f71469f47080d803fd28, type: 3}
+  - ShapeType: 10
+    Lines:
+    - gridPosition: {x: 0, y: 1}
+      isHorizontal: 1
+    - gridPosition: {x: 1, y: 0}
+      isHorizontal: 0
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 1
+    - gridPosition: {x: 0, y: 0}
+      isHorizontal: 0
+    GhostPrefab: {fileID: 1081014968465802060, guid: e307559941422c0429a9a3bd99f48099, type: 3}
+    VisualPrefab: {fileID: 2778150663312508836, guid: 117d64e457454df4fbc7041346b4439e, type: 3}
   horizontalSidelinePrefab: {fileID: 6760432278659007090, guid: 1031e5d579b45754e863fd3b87dfe56b, type: 3}
   verticalSidelinePrefab: {fileID: 2083440383394300276, guid: afc4c33dc916682488515b2230d5efbd, type: 3}
   dotBlockPrefab: {fileID: 8471587195329039579, guid: f8d843d095065fb4f9072d507223c5c4, type: 3}

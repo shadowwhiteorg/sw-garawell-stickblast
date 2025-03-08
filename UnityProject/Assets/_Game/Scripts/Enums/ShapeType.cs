@@ -12,5 +12,6 @@
         UShape_L =7,
         UShape_T =8,
         UShape_D =9,
+        Jocker =10
     }
 }

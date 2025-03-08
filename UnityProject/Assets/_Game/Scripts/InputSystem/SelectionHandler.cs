@@ -10,7 +10,7 @@ namespace _Game.InputSystem
 {
     public class SelectionHandler
     {
-        private GameObject _selectedShapeParent; // Parent object of the selected shape
+        private GameObject _selectedShapeParent;
         private Vector2 _dragOffset;
         private Vector2Int _pivotGridPos;
 
@@ -68,7 +68,7 @@ namespace _Game.InputSystem
                 // Return to initial position
                 MovementHandler.MoveWithEase(
                     _selectedShapeParent.transform,
-                    GridManager.Instance.GridToWorldPosition(_pivotGridPos),
+                    GridManager.Instance.GridToWorldPosition(_pivotGridPos) + Vector2.up,
                     50,
                     Easing.OutSine
                 );
