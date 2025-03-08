@@ -1,0 +1,5 @@
+D:/src/unity/sw-garawell-stickblast/UnityProject/.utmp/RelWithDebInfo/6ml6r6f5/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/src/unity/sw-garawell-stickblast/UnityProject/.utmp/RelWithDebInfo/6ml6r6f5/arm64-v8a/CMakeFiles/rebuild_cache.dir
+D:/src/unity/sw-garawell-stickblast/UnityProject/.utmp/RelWithDebInfo/6ml6r6f5/arm64-v8a/GameActivity/CMakeFiles/game.dir
+D:/src/unity/sw-garawell-stickblast/UnityProject/.utmp/RelWithDebInfo/6ml6r6f5/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+D:/src/unity/sw-garawell-stickblast/UnityProject/.utmp/RelWithDebInfo/6ml6r6f5/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
