@@ -3,6 +3,7 @@ using _Game.BlockSystem;
 using _Game.CoreMechanic;
 using _Game.DataStructures;
 using _Game.InputSystem;
+using _Game.LevelSystem;
 using _Game.Utils;
 using UnityEngine;
 
@@ -131,6 +132,7 @@ namespace _Game.GridSystem
            lineBlock.ShowModel(true);
            lineBlock.transform.SetParent(this.transform);
            MatchHandler.Instance.CheckForSquares(gridPos, lineBlock.IsHorizontal);
+           LevelCreator.Instance.CheckForValidPlacement();
            return true;
        }
 
@@ -155,6 +157,7 @@ namespace _Game.GridSystem
             
             Vector2 worldPos = this.GridToWorldPosition(key);
             SquareBlock square = Instantiate(blockCatalog.squareBlockPrefab, worldPos, Quaternion.identity, transform);
+            square.InitializeVisually();
             square.SetPosition(x, y, worldPos.x, worldPos.y);
             _squareGrid.Add(key, square);
             EventBus.Fire(new OnSquareCreatedEvent());
@@ -183,7 +186,7 @@ namespace _Game.GridSystem
                 // Remove the square
                 if (_squareGrid.Remove(squarePos, out var square))
                 {
-                    Destroy(square.gameObject);
+                    square.Blast();
                 }
 
                 // Remove Lines if not part of another square
@@ -219,10 +222,9 @@ namespace _Game.GridSystem
             // Remove the square
             if (_squareGrid.Remove(squarePos, out var square))
             {
-                Destroy(square.gameObject);
+                square.Blast();
             }
 
-            // Remove Lines if not part of another square
             RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
             RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
             RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
@@ -251,13 +253,13 @@ namespace _Game.GridSystem
 
                 if (_squareGrid.Remove(squarePos, out var square))
                 {
-                    Destroy(square.gameObject);
+                    square.Blast();
                 }
-
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), true);      // Bottom horizontal line
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y + 1), true);  // Top horizontal line
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x, y), false);     // Left vertical line
-                RemoveLineIfNotPartOfAnotherSquare(new Vector2Int(x + 1, y), false); // Right vertical line
+                    
+                RemoveLineForRocketBlast(new Vector2Int(x, y), true);      // Bottom horizontal line
+                RemoveLineForRocketBlast(new Vector2Int(x, y + 1), true);  // Top horizontal line
+                RemoveLineForRocketBlast(new Vector2Int(x, y), false);     // Left vertical line
+                RemoveLineForRocketBlast(new Vector2Int(x + 1, y), false); // Right vertical line
             }
             EventBus.Fire(new OnBlastEvent{BlastCount = _blastedSquares.Count});
             _blastedSquares.Clear();
@@ -281,6 +283,25 @@ namespace _Game.GridSystem
                         {
                             _sidelineGrid.Remove(gridPos);
                         }
+                    }
+                }
+            }
+        }
+
+        private void RemoveLineForRocketBlast(Vector2Int gridPos,bool isHorizontal)
+        {
+            if (_sidelineGrid.TryGetValue(gridPos, out var blocks))
+            {
+                var blockToRemove = blocks.Find(b => b.IsHorizontal == isHorizontal);
+                if (blockToRemove != null)
+                {
+                    blocks.Remove(blockToRemove);
+                    Destroy(blockToRemove.gameObject);
+
+                    // If no blocks remain at this position, remove the entry from the dictionary
+                    if (blocks.Count == 0)
+                    {
+                        _sidelineGrid.Remove(gridPos);
                     }
                 }
             }

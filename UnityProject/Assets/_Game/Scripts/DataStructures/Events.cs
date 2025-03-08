@@ -6,7 +6,10 @@ namespace _Game.DataStructures
     
     public struct OnLevelInitializeEvent { }
     public struct OnLevelStartEvent { }
-    public struct OnLevelLoseEvent {}
+    public struct OnLevelLoseEvent
+    {
+        public bool HasMovementFinished;
+    }
     public struct OnLevelWinEvent {}
     public struct OnRocketSelected {}
     

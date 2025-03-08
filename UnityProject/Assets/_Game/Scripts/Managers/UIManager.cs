@@ -23,6 +23,8 @@ namespace _Game.Managers
         [SerializeField] private Button restartButton;
         [SerializeField] private Button rocketButton;
         [SerializeField] private GameObject activeRocketParent;
+        [SerializeField] private GameObject outOfMovesText;
+        [SerializeField] private GameObject noPlaceText;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip selectSound;
         [SerializeField] private AudioClip dropSound;
@@ -30,6 +32,7 @@ namespace _Game.Managers
         [SerializeField] private AudioClip levelLoseSound;
         [SerializeField] private AudioClip matchSound;
         [SerializeField] private AudioClip blastSound;
+        [SerializeField] private GameObject rocketParticle;
         
         private LevelManager _levelManager;
         private ScoreSystem _scoreSystem;
@@ -41,7 +44,7 @@ namespace _Game.Managers
             _levelManager = LevelManager.Instance;
             _scoreSystem = ScoreSystem.Instance;
             levelText.text = _levelManager.CurrentLevel.ToString();
-            scoreText.text =  0 + " / " + _scoreSystem.TargetScore;
+            scoreText.text =  0 + " / " + _scoreSystem?.TargetScore;
             scoreSlider.value = (float)0 / _scoreSystem.TargetScore;
             movementText.text = _scoreSystem.CurrentMovement + " / " + _scoreSystem.MovementLimit;
             nextLevelButton.onClick.RemoveAllListeners();
@@ -74,11 +77,13 @@ namespace _Game.Managers
             movementText.text = _scoreSystem.CurrentMovement + " / " + _scoreSystem.MovementLimit;
         }
         
-        private void OpenLevelEnd(bool isWin)
+        private void OpenLevelEnd(bool isWin, bool movementFinished = true)
         {
             inGamePanel?.SetActive(false);
             winLevelPanel?.SetActive(isWin);
             loseLevelPanel?.SetActive(!isWin);
+            outOfMovesText.SetActive(movementFinished);
+            noPlaceText.SetActive(!movementFinished);
             if (isWin)
                 audioSource.PlayOneShot(isWin? levelWinSound : levelLoseSound);
         }
@@ -108,6 +113,11 @@ namespace _Game.Managers
             activeRocketParent.SetActive(_isRocketActive);
         }
 
+        public void RocketBlast(Vector3 explosionPos)
+        {
+            Instantiate(rocketParticle,explosionPos,Quaternion.identity);
+        }
+
         private void OnEnable()
         {
             EventBus.Subscribe<OnLevelInitializeEvent>(@event => Initialize());
@@ -130,7 +140,7 @@ namespace _Game.Managers
             EventBus.Unsubscribe<OnScoreChanged>(@event => UpdatePointUI());
             EventBus.Unsubscribe<OnMovementCountChanged>(@event => UpdateMovementUI());
             EventBus.Unsubscribe<OnLevelWinEvent>(@event => OpenLevelEnd(true));
-            EventBus.Unsubscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false));
+            EventBus.Unsubscribe<OnLevelLoseEvent>(@event => OpenLevelEnd(false, @event.HasMovementFinished));
             EventBus.Unsubscribe<OnObjectPlacedEvent>(@event => audioSource.PlayOneShot(dropSound));
             EventBus.Unsubscribe<OnSquareCreatedEvent>(@event =>  PlayMatchSount());
             EventBus.Unsubscribe<OnBlastEvent>(@event => audioSource.PlayOneShot(blastSound));

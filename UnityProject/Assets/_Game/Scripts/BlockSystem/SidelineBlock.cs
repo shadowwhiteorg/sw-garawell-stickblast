@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 namespace _Game.BlockSystem
 {
-    public sealed class SidelineBlock : GridObjectBase, ITouchable
+    public class SidelineBlock : GridObjectBase, ITouchable
     {
         
         [SerializeField] private Vector2 touchSize = Vector2.zero;

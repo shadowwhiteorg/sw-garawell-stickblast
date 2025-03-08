@@ -20,7 +20,7 @@ namespace _Game.BlockSystem
         
         
         
-        public void SetWorldPosition(Vector2 worldPosition)
+        public virtual void SetWorldPosition(Vector2 worldPosition)
         {
             WorldPosition = worldPosition;
         }

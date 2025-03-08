@@ -63,7 +63,8 @@ namespace _Game.Managers
             Vector2Int? clickedSquare = GridManager.Instance.GetClickedSquare(worldPosition);
             if (clickedSquare.HasValue)
             {
-                GridManager.Instance.BlastSquare(clickedSquare.Value);
+                UIManager.Instance.RocketBlast(worldPosition);
+                MatchHandler.Instance.BlastConnectedSquares(clickedSquare.Value);
             }
         }
         

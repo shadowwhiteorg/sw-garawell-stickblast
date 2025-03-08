@@ -57,7 +57,7 @@ namespace _Game.LevelSystem
                 else
                 {
                     // TODO: Fire Game Over Event Here!!!
-                    EventBus.Fire(new OnLevelLoseEvent());
+                    EventBus.Fire(new OnLevelLoseEvent{HasMovementFinished = false});
                     Debug.LogWarning("No valid shape found! Possible game over condition.");
                 }
             }
@@ -143,6 +143,28 @@ namespace _Game.LevelSystem
             for (int i = 0; i < outOfTheSceneTarget.transform.childCount; i++)
             {
                 Destroy(outOfTheSceneTarget.transform.GetChild(i).gameObject);
+            }
+        }
+        
+        public void CheckForValidPlacement()
+        {
+            if (_sidelineBlocks.Count == 0) return; 
+
+            bool hasValidPlacement = false;
+
+            foreach (var block in _sidelineBlocks)
+            {
+                if (GridManager.Instance.CanPlaceShapeAnywhere(block.Shape, out _))
+                {
+                    hasValidPlacement = true;
+                    break;
+                }
+            }
+
+            if (!hasValidPlacement)
+            {
+                EventBus.Fire(new OnLevelLoseEvent{HasMovementFinished = false});
+                Debug.LogWarning("No valid placement for remaining touchable blocks. Level lost!");
             }
         }
         
